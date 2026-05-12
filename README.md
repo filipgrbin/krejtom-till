@@ -10,12 +10,19 @@ npm run dist
 This produces three files in the release\ folder:
 
 Pokladna Setup 1.0.1.exe
+
 Pokladna Setup 1.0.1.exe.blockmap
+
 latest.yml
+
 3. Create a GitHub Release
+
 Go to github.com/filipgrbin/krejtom-till → Releases → Draft a new release
+
 Tag: v1.0.1 ← must match package.json version with v prefix
+
 Title: v1.0.1 (or v1.0.1 [FORCED] if everyone must update)
+
 Upload all 3 files from the release\ folder
 Publish
 That's it. ✅
