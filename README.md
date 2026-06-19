@@ -1,41 +1,17 @@
 # krejtom-till
 versioning
 
-1. Bump the version
-Open package.json, change "version":
+1. Open OPEN-THIS.bat in root folder where all the files are (app, package.json, components etc)
+- also make sure fix-update-hash.ps1
 
-"version": "1.0.1"   ← increment this
-pokud forced tak "1.0.1f"
-2. Build
-npm run dist
-This produces three files in the release\ folder:
+2. Input new version number for example 1.4.0 , 1.4.5 , 1.5.9f(for forced)
 
-Pokladna Setup 1.0.1.exe
+3. Let the Bat run, after its done go to realeases folder take setup.exe then setup exe.blockmap and latest.yml
 
-Pokladna Setup 1.0.1.exe.blockmap
+4. Make a new release here in this repo, name it v(the version you put in the BAT) so for example v1.4.8 etc. again v1.4.8f for forced update
 
-latest.yml
+5. in name put the same thing as tag
 
-3. Create a GitHub Release
+6. Describe the update and put the 3 files i listed in step 3 in the release
 
-Go to github.com/filipgrbin/krejtom-till → Releases → Draft a new release
-
-Tag: v1.0.1 ← must match package.json version with v prefix
-
-Title: v1.0.1 (or v1.0.1f if everyone must update)
-
-Upload all 3 files from the release\ folder
-Publish
-That's it. ✅
-
-🔄 What happens on the user's machine
-Step	What happens
-App launches	Window stays hidden while checking krejtom-till releases
-Update found	Update dialog appears — user sees it before anything else
-Forced (f)	Dialog cannot be closed, app unusable until installed
-User clicks Nainstalovat	Delta download starts (only changed bytes, not full Setup.exe)
-Download done	App shows "restarting…" and quits
-Silent install	New version installs without any wizard
-App relaunches	Opens fresh on the new version
-No update	Window shows normally, nothing interrupts the user
-No internet at startup	Window shows after 8 s timeout, retries when internet comes back
+7. DONE
