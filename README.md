@@ -21,6 +21,12 @@ Pokladní systém pro prodejny s regulovaným zbožím (PML / kratom dle vyhl. 1
 Tato příručka vás provede od prvního spuštění až po každodenní práci.
 
 ---
+# WellSale — uživatelská příručka
+
+Pokladní systém pro prodejny s regulovaným zbožím (PML / kratom dle vyhl. 147/2025 Sb.).
+Tato příručka vás provede od prvního spuštění až po každodenní práci.
+
+---
 
 ## 1. První spuštění a nastavení
 
@@ -38,7 +44,7 @@ Při prvním spuštění se otevře **průvodce nastavením**. Projdete těmito 
 10. **Administrativní účet** — jméno + 5místný PIN. Tímto účtem se přihlašujete.
 11. Volitelně další uživatelé, DPH a dokončení.
 
-> Po dokončení se aplikace spustí a přihlásíte se PINem (pokud je PIN zapnutý).
+> Po dokončení se aplikace spustí a přihlásíte se PINem (pokud je PIN zapnutý). PIN píšete **rovnou** — první účet je předvybraný, takže nemusíte nejdřív klikat na uživatele. Při více účtech jdou ostatní vybrat dole.
 
 ---
 
@@ -112,7 +118,7 @@ Nastavení otevřete **ozubeným kolem** vpravo nahoře. Sekce jsou seskupené (
 Admin může vytvářet uživatele s vlastním PINem a sadou oprávnění (tlačítka **Prodavač** / **Administrace** nastaví výchozí sady). Každé oprávnění lze zapnout/vypnout zvlášť.
 
 ### Skrýt částky
-Tlačítko „Skrýt částky" rozostří peněžní hodnoty (vhodné při sdílení obrazovky). Hodnoty se nemažou — po vypnutí jsou hned čitelné. Checkboxy určují oblasti (Analýza / Historie / Uzávěrky).
+Tlačítko „Skrýt částky" rozostří peněžní hodnoty (vhodné při sdílení obrazovky). Hodnoty se nemažou — po vypnutí jsou hned čitelné. Checkboxy určují oblasti (Analýza / Historie / Uzávěrky) a jsou aktivní, **jen když je „Skrýt částky" zapnuté**.
 
 ### Automatické uzamčení
 Po zadaném počtu minut nečinnosti aplikace znovu vyžádá PIN (jen když je PIN zapnutý).
@@ -137,7 +143,7 @@ Při obnově (z cloudu nebo přetažením souboru do okna) se otevře náhled ob
 > Při obnově z **jiné licence** se identita (licence, pobočka) automaticky ponechá vaše — nedojde k odhlášení ani neshodě.
 
 ### Přidání uzávěrky ze zálohy
-Přetáhněte soubor uzávěrky (`.wsbak`/`.db`) do okna → „Přidat do uzávěrek". Pokud z toho data uzávěrku ještě nemáte, přidá se do seznamu (netiskne se, neposílá oznámení).
+Přetáhněte soubor uzávěrky (`.wsbak`/`.db`) do okna → „Přidat do uzávěrek". Pokud z toho data uzávěrku ještě nemáte, přidá se do seznamu (netiskne se, neposílá oznámení). Spolu s uzávěrkou se přidají i **prodeje a skladové pohyby toho dne**, takže k ní funguje i **evidenční kniha PML**.
 
 ---
 
