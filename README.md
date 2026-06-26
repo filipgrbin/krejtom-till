@@ -40,10 +40,15 @@ Vlevo nahoře je logo. Okno má vlastní horní lištu s minimalizací / maximal
 3. Dole vidíte **mezisoučet, DPH a celkem**.
 4. **Zaplatit** → vyberte **Hotově** nebo **QR**.
    - U hotovosti zadejte přijatou částku (nebo nechte prázdné) a stiskněte **Enter** — potvrdí prodej a ukáže částku k vrácení. Myš není potřeba.
+   - U **QR** se zobrazí QR kód na částku (i na zákaznickém displeji, je-li zapnutý); po zaplacení potvrďte tlačítkem **Zaplaceno**.
 5. Pokud je zboží věkově omezené, potvrďte ověření věku.
 6. Po prodeji se (je-li zapnuto) automaticky vytiskne účtenka.
 
 **Sleva na produkt:** v Nastavení → Produkty u produktu tlačítko „Sleva". Slevněná cena platí do zadaného data a v košíku se zobrazí přeškrtnutá původní cena.
+
+**Dlaždice produktů:** pod názvem se šedě zobrazuje **forma · velikost · šarže** (jen vyplněné údaje). Dlaždici lze obarvit a zařadit do **kategorie** (záložky nad plochou) v editaci produktu. Tlačítkem **Uspořádat** dlaždice přetáhnete za horní úchyt do jiného pořadí.
+
+**Zákaznický displej:** je-li zapnutý druhý monitor (Nastavení → Zákaznický displej), zákazník vidí košík a celkovou částku, a při platbě QR kód / částku k úhradě hotově. Když v nastavení vyplníte **IBAN**, QR se vygeneruje **automaticky na váš účet a na aktuální částku košíku** (QR Platba / SPAYD) — zákazník jen naskenuje a má předvyplněnou částku.
 
 ---
 
@@ -82,12 +87,23 @@ KPI (tržba, transakce, kusy, největší nákup), srovnání s předchozím obd
 
 Nastavení otevřete **ozubeným kolem** vpravo nahoře. Sekce jsou seskupené (vlevo navigace):
 
-- **Účet a vzhled:** Soukromí („Skrýt částky" — rozostří částky; vyberete oblasti), Vzhled (světlý/tmavý/systém), Uživatelé.
-- **Prodejna:** Produkty (vč. nákupní ceny, šarže, dodavatele), Sledování zisku, Dodavatelé, DPH, Sklad.
+- **Účet a vzhled:** Soukromí („Skrýt částky" — rozostří částky; vyberete oblasti), Vzhled (světlý/tmavý/systém), **Výkon** („Slabý stroj" — vypne animace pro plynulejší chod na starších PC), **Zákaznický displej** (druhý monitor), Uživatelé.
+- **Prodejna:** Produkty (vč. nákupní ceny, šarže, formy, velikosti, **kategorie a barvy dlaždice**, dodavatele), Sledování zisku, Dodavatelé, DPH, Sklad.
 - **Komunikace:** NTFY oznámení, Tiskárna, Provozovna (IČO/DIČ/povolení PML), Počasí.
 - **Systém:** Aktualizace, Automatické uzamčení (PIN po nečinnosti), Kurz EUR/CZK, PML export XML, Audit log, Diagnostika.
-- **Elektronický podpis** + **Cloudové zálohy** + **Zálohy** (lokální/cloud/Drive).
-- Dole **Poděkování** (open-source knihovny) a **Přehled stavu (Health)**.
+- **Elektronický podpis** + **Stav systému** + **Fronty** + **Cloudové zálohy** + **Zálohy** (lokální/cloud/Drive).
+- Dole **Poděkování** (open-source knihovny) a odkazy **wellsale.cz** / **Online administrace**.
+
+### Tiskárna a vzhled účtenky
+Účtenku lze upravit dvěma způsoby (přepínač **Vizuální editor účtenky**):
+- **Klasický (text):** šablony horní/dolní části s placeholdery (`<nazev>`, `<celkem>`, `<cara>`…).
+- **Vizuální (bloky):** přetahovací bloky (logo, položky, celkem, QR…) s živým náhledem; u každého bloku zarovnání, tučně, dvojitá výška.
+- **Řádek položky `<sale>`:** šablona toho, co se tiskne u každé prodané položky. Výchozí je `<qty>x <nazev><detail_inline>` — za názvem se přidá **forma, velikost a šarže** (jen vyplněné), např. „2x Kratom Zelený prášek 50g (C5464556)"; když produkt nemá nic z toho, je tam jen název. Další placeholdery: `<cena>`, `<detail>` (odděleno ·), `<forma>`, `<velikost>`, `<sarze>`.
+- **Výchozí účtenka** neobsahuje DPH ani poznámku; **IČO a DIČ** se vytisknou jen když jsou vyplněné v Provozovně.
+
+### Fronty a Stav systému
+- **Fronty:** přehled čekajících operací (tisk, upload uzávěrek, NTFY) — položku lze odebrat nebo celou frontu zkusit znovu. Tisk, který selže (offline tiskárna), se sem uloží a zopakuje — účtenka se neztratí.
+- **Stav systému (Health):** preventivní kontrola — integrita databáze, volné místo, tiskárna, expirace certifikátu, licence a stáří čekajících uploadů (pozná, když se např. uzávěrky neodesílají).
 
 > Sekce, na které nemá přihlášený uživatel oprávnění, se nezobrazí.
 
