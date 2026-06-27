@@ -165,4 +165,53 @@ Přetáhněte soubor uzávěrky (`.wsbak`/`.db`) do okna → „Přidat do uzáv
 
 ---
 
+## 11. Jak funguje podepisování skladových pohybů?
+
+
+Technicky, krok po kroku.
+
+Co se uloží do DB
+Tabulka stock_movements (a stejně transactions) má dva sloupce:
+
+sloupec	obsah
+signature	Base64 řetězec — surové bajty RSA podpisu
+cert_thumbprint	otisk certifikátu (hex, SHA-1 z certifikátu) — identifikuje, KTERÝM certem (= kým) bylo podepsáno
+Co přesně se podepisuje (kanonický řetězec)
+Ne celý řádek z DB, ale deterministicky složený string z klíčových polí:
+
+SM|<id>|<product_id>|<delta>|<kind>|<created_at>|<stock_after>
+Příklad: SM|412|37|-3|sale|2026-06-27T10:15:00.000Z|18
+
+(U transakce: TX|<id>|<total>|<payment_method>|<created_at>|<itemCount>.)
+
+Funkce: _esignMovementData(sm) / _esignTransactionData v main.cjs.
+
+Jak se z toho vyrobí podpis (_esignSignData, přes PowerShell)
+1. cert  = Get-Item Cert:\CurrentUser\My\<thumbprint>     # certifikát (klíč může být na USB tokenu)
+2. rsa   = GetRSAPrivateKey(cert)                          # privátní klíč
+3. data  = UTF8.GetBytes("SM|412|37|-3|sale|...|18")       # UTF-8 bajty kanonického řetězce
+4. sig   = rsa.SignData(data, SHA256, Pkcs1)               # RSA podpis nad SHA-256 hashem, padding PKCS#1 v1.5
+5. ulož  = Base64String(sig)                               # → tohle jde do sloupce `signature`
+Takže obsah signature = Base64( RSASSA-PKCS1-v1_5( SHA256( UTF8(kanonický_řetězec) ) ) ).
+Algoritmus: SHA256withRSA, PKCS#1 v1.5. Délka base64 ≈ podle klíče (2048bit RSA → ~344 znaků).
+
+Uloží to db.updateMovementSignature(id, signature, thumbprint) — běží na pozadí (setImmediate) hned po vytvoření pohybu, certem pracovníka, který ho udělal (per-účet users.cert_thumbprint, fallback globální cert).
+
+Co se z toho dá ověřit (a jak to vypadá v XML exportu)
+V PML XML je u záznamu blok <elektronickyPodpis>, který je samonosný (ověřitelný offline):
+
+``<elektronickyPodpis>`
+`   <algoritmus>SHA256withRSA (PKCS#1 v1.5)</algoritmus>`
+`   ...otisk certifikátu (thumbprint)...`
+`   <podepsanaData>SM|412|37|-3|sale|2026-06-27T10:15:00.000Z|18</podepsanaData>`
+`   <hodnota>BASE64_PODPISU…</hodnota>`
+`   <certifikat format="base64-DER">MIID… (veřejný certifikát podepisujícího)</certifikat>`
+`</elektronickyPodpis>`
+podepsanaData = přesně to, co bylo podepsané,
+hodnota = base64 podpis (totéž co v DB),
+certifikat = veřejný klíč podepisujícího (vložený, takže ověření nepotřebuje přístup do úložiště).
+Ověření: vezmu podepsanaData → UTF-8 bajty → SHA-256 → RSA verify veřejným klíčem z certifikat proti hodnota. Když kdokoliv v DB změní třeba delta z -3 na -5, kanonický řetězec je jiný → hash jiný → podpis nesedí → padělek odhalen. A cert_thumbprint říká, čí klíč to byl.
+
+Krátce: do signature jde base64 RSA-SHA256 podpisu UTF-8 řetězce SM|id|product_id|delta|kind|created_at|stock_after, do cert_thumbprint otisk certifikátu podepisujícího.
+
 *V případě dotazů kontaktujte dodavatele aplikace.*
