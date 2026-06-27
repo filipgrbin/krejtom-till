@@ -200,13 +200,13 @@ Uloží to db.updateMovementSignature(id, signature, thumbprint) — běží na 
 Co se z toho dá ověřit (a jak to vypadá v XML exportu)
 V PML XML je u záznamu blok <elektronickyPodpis>, který je samonosný (ověřitelný offline):
 
-``<elektronickyPodpis>`
-`   <algoritmus>SHA256withRSA (PKCS#1 v1.5)</algoritmus>`
-`   ...otisk certifikátu (thumbprint)...`
-`   <podepsanaData>SM|412|37|-3|sale|2026-06-27T10:15:00.000Z|18</podepsanaData>`
-`   <hodnota>BASE64_PODPISU…</hodnota>`
-`   <certifikat format="base64-DER">MIID… (veřejný certifikát podepisujícího)</certifikat>`
-`</elektronickyPodpis>`
+<elektronickyPodpis>
+   <algoritmus>SHA256withRSA (PKCS#1 v1.5)</algoritmus>
+   ...otisk certifikátu (thumbprint)...
+   <podepsanaData>SM|412|37|-3|sale|2026-06-27T10:15:00.000Z|18</podepsanaData>
+   <hodnota>BASE64_PODPISU…</hodnota>
+   <certifikat format="base64-DER">MIID… (veřejný certifikát podepisujícího)</certifikat>
+</elektronickyPodpis>
 podepsanaData = přesně to, co bylo podepsané,
 hodnota = base64 podpis (totéž co v DB),
 certifikat = veřejný klíč podepisujícího (vložený, takže ověření nepotřebuje přístup do úložiště).
