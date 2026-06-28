@@ -391,9 +391,7 @@ Do `signature` se ukládá **Base64 RSA‑SHA256 (PKCS#1 v1.5) podpisu UTF‑8 �
 
 | # | mezera | §  | dopad |
 |---|---|---|---|
-| 1 | **Evidence poruch** systému (podepsaná, pole a–f, zápis do 14 dní) | § 5(3) | ❌ chybí — doporučeno doplnit |
 | 2 | **5letá retence** dat/záloh — politika + kontrola (varovat při chybějících starších zálohách) | § 4(1), § 5(1) | ⚠️ |
-| 3 | **Opravy záznamů** — podepsaná oprava se zobrazením původního obsahu pro všechny typy | § 3(4), § 4(2) | ⚠️ |
 | 4 | **Sídlo vs. provozovna** odděleně; **funkce** osoby u inventury | § 3(1)a, § 6(3) | ⚠️ kosmetické/doplňková pole |
 | 5 | **Vnitřní předpisy** (přístupy, zálohy, poruchy, školení) | § 5(2) | 🟦 provozovatel — dodat šablonu |
 
