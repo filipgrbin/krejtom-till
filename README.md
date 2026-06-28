@@ -302,5 +302,110 @@ Do `signature` se ukládá **Base64 RSA‑SHA256 (PKCS#1 v1.5) podpisu UTF‑8 �
 `cert_thumbprint` **otisk certifikátu** podepisujícího — dohromady dokazují
 **kdo** zápis provedl a že se **od té doby nezměnil**.
 
+---
+## 12. PML Compliance list
 
+
+# WellSale — compliance s vyhláškou 147/2025 Sb. (evidence PML)
+
+> Mapování požadavků vyhlášky na funkce aplikace. **Není to právní posudek**, ale
+> technická kontrola, co software pokrývá. Stav k poslednímu auditu (po doplnění
+> podpisu inventury, polí uživatele a inventurního protokolu).
+>
+> Legenda: ✅ splněno · ⚠️ částečně · ❌ chybí · 🟦 odpovědnost provozovatele (ne software) · 📄 řešeno mimo SW (papírově)
+
+---
+
+## Evidenční záznam — povinná pole a) až n)
+
+| | požadavek | stav | poznámka |
+|---|---|---|---|
+| a | název PML + forma + podtyp | ✅ | `nazev`, `forma`, `podtyp` (XML i PDF) |
+| b | název výrobku + velikost jednotkového balení | ✅ | `nazev` + `velikostBaleni` |
+| c | datum příjmu | ✅ | `datumPrijmu` |
+| d | datum výdeje | ✅ | `datumVydeje` |
+| e | číslo dokladu o příjmu | ✅ | `cisloDokladuPrijmu` |
+| f | číslo dokladu o výdeji | ✅ | `cisloDokladuVydeje` (u prodeje `TX-<id>`) |
+| g | číslo šarže | ✅ | `cisloSarze` |
+| h | jméno/název a sídlo dodavatele | ✅ | `dodavatel` na každém řádku (příjem i výdej, je‑li nastaven) |
+| i | množství přijaté | ✅ | `mnozstviPrijate` |
+| j | množství vydané | ✅ | `mnozstviVydane` |
+| k | jednotka množství | ✅ | `jednotkaMnozstvi` |
+| l | stav zásob | ✅ | `stavZasob` |
+| m | identifikace osvědčení podle § 33f odst. 2 zákona | 📄 | k dispozici na prodejně v papírové podobě (lze doplnit i do SW jako volitelné pole) |
+| n | uznávaný el. podpis osoby, která zápis provedla | ✅ | per‑záznam podpis RSA‑SHA256 + `cert_thumbprint` (per‑účet) |
+
+---
+
+## § 3 — Evidenční kniha (obecné požadavky)
+
+| odst. | požadavek | stav | poznámka |
+|---|---|---|---|
+| (1) a | jméno/firma + adresa sídla + označení a **adresa provozovny** (je‑li odlišná) | ⚠️ | máme název, adresu, IČO, č. povolení; **sídlo vs. provozovna** zatím jako jedna adresa |
+| (1) c | osoba zapisující: jméno + **adresa trvalého pobytu** + **podpisový vzor** + **datum od kdy provádí záznamy** | ✅/⚠️ | jméno ✅, adresa ✅ (nově), datum „od" ✅ (nově); „podpisový vzor" = el. podpis certifikátem (elektronická obdoba) |
+| (1) d | datum předání knihy do/z používání | 📄 | papírový koncept; pro el. evidenci viz § 4–5 |
+| (1) e | počet listů + číslo prvního/posledního | 📄 | papírový koncept (listy) — pro el. evidenci se neuplatní |
+| (1) f | seznam látek s čísly listů | 📄 | papírový koncept |
+| (3) | zápis v den skutečnosti + podpis | ✅ | `created_at = teď` + per‑záznam el. podpis |
+| (4) | opravy se zachováním obsahu původního záznamu + datum + podpis | ⚠️ | máme event‑sourcing (`transaction_events`) + audit log + korekce skladu jako nový `adjust` pohyb; formální „podepsaná oprava se zobrazením originálu" pro všechny typy ještě doladit |
+| (5) | uchování 5 let, ochrana proti znehodnocení | ⚠️ | data se drží lokálně + zálohy; **5letá retence není vynucená/hlídaná** |
+
+---
+
+## § 4 — Elektronická evidence
+
+| odst. | požadavek | stav | poznámka |
+|---|---|---|---|
+| (1) | denní sledování pohybu a stavu zásob + zpětné zjištění 5 let | ✅/⚠️ | pohyby se `stav_after`, denní uzávěrky; 5letá retence ⚠️ |
+| (2) | opravy se zachováním původního + datum + podpis | ⚠️ | viz § 3(4) |
+| (3) | jen oprávněné osoby + každý zápis uznávaný el. podpis | ✅ | oprávnění (role/permissions) + per‑záznam podpis |
+| (4) | samostatně pro **organizační složky** a pro **činnosti** | ✅/⚠️ | per pobočka = oddělená evidence ✅; oddělení per činnost (příjem/výdej v jedné evidenci) ⚠️ |
+| (5) | zápis v den skutečnosti | ✅ | (manuální zpětná uzávěrka je výslovně označená) |
+| (6) | okamžitý jednotný **.xml** výstup + **tiskový** výstup | ✅ | PML export XML + PDF |
+
+---
+
+## § 5 — Vedení elektronické evidence
+
+| odst. | požadavek | stav | poznámka |
+|---|---|---|---|
+| (1) | uchování nosičů dat 5 let + **zálohování bez odkladu po závěrce dne** + zálohy na **odlišných nosičích** | ✅/⚠️ | uzávěrka → auto‑záloha cloud (S3) / Google Drive = jiný nosič ✅; 5letá retence ⚠️ |
+| (2) a–h | **vnitřní písemné předpisy** (přístupová práva, zálohování, rekonstrukce, řešení poruch, školení…) | 🟦 | odpovědnost provozovatele; software nedodá (lze připravit šablonu dokumentu) |
+| (3) a–f | **evidence poruch** systému (číslo položky, datum poruchy, popis, řešení, podpis, datum), zápis do 14 dní | ❌ | **CHYBÍ** jako funkce; máme jen audit log / crash reporty / offline‑errors.log |
+
+---
+
+## § 6 — Inventura
+
+| odst. | požadavek | stav | poznámka |
+|---|---|---|---|
+| (1) | čtvrtletní inventura k poslednímu dni čtvrtletí (i bez pohybu) | ✅ | inventura + čtvrtletní upozornění (overdue varování) |
+| (2) a–d | záznam o provedení inventury **v listinné podobě**: počáteční stav · celkový příjem · celkový výdej · stav k poslednímu dni | ✅ | **nově** — „Protokol PDF" u inventury (`inventura-protokol-*.pdf`) počítá počáteční/příjem/výdej/konečný za období |
+| (3) | datum, jméno, **funkce**, **podpis** osoby | ✅/⚠️ | datum ✅, jméno ✅, **podpis** ✅ (nově — inventura se el. podepisuje certem přihlášeného), **funkce** = kolonka v PDF k ručnímu doplnění ⚠️ |
+| (4) | „Stav nezměněn" když bez pohybu | ✅ | **nově** — protokol to uvádí, když v období nenastal pohyb |
+| (5) | inventurní protokol při rozdílu (rozdíly, zdůvodnění, datum, jméno, funkce, podpis) | ✅/⚠️ | **nově** — protokol zvýrazňuje rozdíly + sloupec „Zdůvodnění"; zdůvodnění/funkce k ručnímu doplnění |
+
+---
+
+## Shrnutí zbývajících mezer (priorita)
+
+| # | mezera | §  | dopad |
+|---|---|---|---|
+| 1 | **Evidence poruch** systému (podepsaná, pole a–f, zápis do 14 dní) | § 5(3) | ❌ chybí — doporučeno doplnit |
+| 2 | **5letá retence** dat/záloh — politika + kontrola (varovat při chybějících starších zálohách) | § 4(1), § 5(1) | ⚠️ |
+| 3 | **Opravy záznamů** — podepsaná oprava se zobrazením původního obsahu pro všechny typy | § 3(4), § 4(2) | ⚠️ |
+| 4 | **Sídlo vs. provozovna** odděleně; **funkce** osoby u inventury | § 3(1)a, § 6(3) | ⚠️ kosmetické/doplňková pole |
+| 5 | **Vnitřní předpisy** (přístupy, zálohy, poruchy, školení) | § 5(2) | 🟦 provozovatel — dodat šablonu |
+
+**Splněno:** záznam a–l + n, § 3(3), celé § 4 výstupy + podpisy, § 5(1) zálohování po závěrce, celé § 6 (inventura vč. podpisu a protokolů). Bod **m)** je řešen papírově na prodejně.
+
+---
+
+> **Poznámka k rozsahu:** tato tabulka pokrývá části vyhlášky relevantní pro
+> pokladní/skladový software (evidenční záznam, § 3–§ 6). Paragrafy o evidenci pro
+> jednotlivé činnosti (pěstování, výroba, lékárny, dovoz/vývoz) a přílohy
+> (formuláře/oznámení Ministerstvu zdravotnictví) se týkají registrace a činností
+> mimo maloobchodní prodej — nejsou předmětem této aplikace. Pokud je chceš taky
+> ztabulkovat, pošli jejich text (oficiální zdroje `zakonyprolidi.cz` /
+> `e-sbirka.gov.cz` blokují automatické stažení).
 *V případě dotazů kontaktujte dodavatele aplikace.*
