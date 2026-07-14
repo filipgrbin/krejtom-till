@@ -31,6 +31,30 @@ Nahoře je **lišta s kartami**: **Prodej · Věk 18+ · Sklad · Historie · An
 
 Vlevo nahoře je logo. Okno má vlastní horní lištu s minimalizací / maximalizací / zavřením.
 
+**Spodní lišta** (nová) — v dolní části obrazovky je lišta s:
+- přihlášeným účtem (vlevo)
+- aktuálním datem a časem
+- počasím (je-li nastavené město)
+- zkratkou na **Zdraví (Health)**
+- zkratkou na **Nastavení**
+- minimálním datem narození (pro ověřování věku)
+- ikonou 🔔 **Oznámení** — viz sekce Oznámení níže
+- ikonou ⚠ **Hlásit poruchu** — otevře dialog pro odeslání hlášení o poruše
+
+### Oznámení od WellSale týmu
+
+Kliknutím na ikonu zvonku (🔔) v pravém dolním rohu se otevře panel oznámení. Nepřečtené zprávy mají světlejší pozadí, přečtené tmavší. Červená tečka na zvonku znamená, že je nové nepřečtené oznámení.
+
+**Priority oznámení:**
+- 🟢 **Nízká** — informační
+- 🟡 **Střední** — doporučení
+- 🟠 **Vysoká** — důležité
+- 🔴 **Okamžitá** — kritické, zobrazí se jako modální dialog ihned při spuštění (s tenkým červeným rámečkem) s odpočtem — tlačítko „OK, rozumím" se aktivuje po 3 sekundách
+
+Tlačítkem **Obnovit** (⟳) v panelu znovu načtete oznámení ze serveru. Klikem na oznámení v seznamu se zobrazí jeho plný text.
+
+> Oznámení označená jako „Pouze pro správce" vidí jen administrátor nebo uživatel s oprávněním spravovat uživatele.
+
 ---
 
 ## 3. Prodej (denní práce)
@@ -70,8 +94,11 @@ V sekci Sklad → „Generovat hlášení (PDF)" + výběr roku. Podává se na 
 ## 5. Historie a Uzávěrka
 
 - **Historie** — seznam transakcí. Lze **upravit** položku, **vytisknout** znovu, vygenerovat **fakturu (PDF)** a exportovat do Excelu.
+- **Smazané transakce** — transakce lze „měkce" smazat (tlačítkem Smazat v detailu). Nesmaže se z databáze, jen se skryje. Zaškrtnutím **Zobrazit smazané** v historii uvidíte smazané transakce s červeným rámečkem — jen pro referenci. Smazané transakce se nepočítají do uzávěrek, exportů ani analytiky.
 - **Uzávěrka** — souhrn dne. Tlačítkem **Uzavřít dnešní den** vytvoříte uzávěrku (a nahraje se na cloud, pokud je zapnutý). Můžete exportovat **evidenční knihu PML (PDF)**.
 - **Pokladní pohyby** (vklad/výdaj hotovosti) — pokud jsou zapnuté.
+
+> **Poznámka k výkonu:** V historii se zobrazuje max. 500 posledních transakcí (200 v nízkoadaptovaném módu). Při dosažení limitu se zobrazí upozornění — zúžte rozsah dat.
 
 ---
 
@@ -79,20 +106,42 @@ V sekci Sklad → „Generovat hlášení (PDF)" + výběr roku. Podává se na 
 
 KPI (tržba, transakce, kusy, největší nákup), srovnání s předchozím obdobím, nejaktivnější dny/hodiny, top produkty, týdenní průběh. Filtr: týden / měsíc / vše / vlastní rozsah. Export do Excelu.
 
+**Přepínání pohledů grafu:**
+- Šipka **→** přepne ze **týdenního** na **hodinový** pohled (průměr z vybraného období, 24 sloupců = hodiny dne).
+- Šipka **←** přepne zpět na týdenní.
+- Při rozsahu více měsíců/let se zobrazí také šipka pro **měsíční** pohled (sloupcový graf po měsících, s výběrem roku).
+
 **Zisk:** v Nastavení → „Sledování zisku" zapněte funkci a u produktů vyplňte **nákupní cenu**. Analýza pak ukáže **zisk** (obrat − nákupní ceny) vedle obratu.
 
 ---
 
 ## 7. Nastavení (přehled sekcí)
 
-Nastavení otevřete **ozubeným kolem** vpravo nahoře. Sekce jsou seskupené (vlevo navigace):
+Nastavení otevřete **ozubeným kolem** vpravo nahoře (nebo zkratkou ve spodní liště). Sekce jsou seskupené (vlevo navigace):
 
-- **Účet a vzhled:** Soukromí („Skrýt částky" — rozostří částky; vyberete oblasti), Vzhled (světlý/tmavý/systém), **Výkon** („Slabý stroj" — vypne animace pro plynulejší chod na starších PC), **Zákaznický displej** (druhý monitor), Uživatelé.
-- **Prodejna:** Produkty (vč. nákupní ceny, šarže, formy, velikosti, **kategorie a barvy dlaždice**, dodavatele), Sledování zisku, Dodavatelé, DPH, Sklad.
+- **Účet a vzhled:** Soukromí („Skrýt částky" — rozostří částky; vyberete oblasti, **nově také Sklad**), Vzhled (světlý/tmavý/systém), **Výkon** („Slabý stroj" — vypne animace, sníží frekvenci obnovování pro plynulejší chod na starších PC), **Dotykový mód** (viz níže), **Zákaznický displej** (druhý monitor + výběr monitoru), Uživatelé.
+- **Prodejna:** Produkty (vč. nákupní ceny, šarže, formy, velikosti, **kategorie a barvy dlaždice**, dodavatele, **PML příznak**), Sledování zisku, Dodavatelé (**nově s polem Stát** pro roční hlášení), DPH, Sklad.
 - **Komunikace:** NTFY oznámení, Tiskárna, Provozovna (IČO/DIČ/povolení PML), Počasí.
-- **Systém:** Aktualizace, Automatické uzamčení (PIN po nečinnosti), Kurz EUR/CZK, PML export XML, Audit log, Diagnostika.
+- **Systém:** Aktualizace, Automatické uzamčení (PIN po nečinnosti — **0 minut = nikdy nezamknout**), Kurz EUR/CZK, PML export XML, Audit log, Diagnostika.
 - **Elektronický podpis** + **Stav systému** + **Fronty** + **Cloudové zálohy** + **Zálohy** (lokální/cloud/Drive).
+- **Šablony prodejen** — export/import konfigurace (produkty, dodavatelé, základní nastavení) pro sdílení mezi pobočkami.
 - Dole **Poděkování** (open-source knihovny) a odkazy **wellsale.cz** / **Online administrace**.
+
+### Dotykový mód (nové)
+
+V sekci **Vzhled & přístupnost** lze zapnout **Dotykový mód**. Po zapnutí se u jakéhokoli textového pole zobrazí plná klávesnice na obrazovce, u číselných polí numerická klávesnice. Klávesnice je přetažitelná (podržte záhlaví) a má tlačítko **Hotovo** pro skrytí. Klávesnice zmizí také při přechodu na jinou stránku.
+
+### Zákaznický displej — výběr monitoru
+
+V sekci Zákaznický displej (Nastavení → Účet a vzhled) lze nově vybrat cílový monitor. Pokud máte připojen jen jeden monitor, zobrazí se upozornění „Máte pouze 1 obrazovku — pro zákaznický displej připojte druhý monitor."
+
+### Šablony prodejen
+
+Sekce **Šablony prodejen** (Nastavení) umožňuje:
+- **Exportovat šablonu** — uloží produkty, dodavatele a vybraná nastavení do souboru `.json`.
+- **Importovat šablonu** — přidá produkty a dodavatele ze souboru do aktuální prodejny (stávající data se nepřepíší, nová se přidají).
+
+> Šablona **neobsahuje** transakce, uzávěrky, historii ani název prodejny.
 
 ### Tiskárna a vzhled účtenky
 Účtenku lze upravit dvěma způsoby (přepínač **Vizuální editor účtenky**):
@@ -100,6 +149,16 @@ Nastavení otevřete **ozubeným kolem** vpravo nahoře. Sekce jsou seskupené (
 - **Vizuální (bloky):** přetahovací bloky (logo, položky, celkem, QR…) s živým náhledem; u každého bloku zarovnání, tučně, dvojitá výška.
 - **Řádek položky `<sale>`:** šablona toho, co se tiskne u každé prodané položky. Výchozí je `<qty>x <nazev><detail_inline>` — za názvem se přidá **forma, velikost a šarže** (jen vyplněné), např. „2x Kratom Zelený prášek 50g (C5464556)"; když produkt nemá nic z toho, je tam jen název. Další placeholdery: `<cena>`, `<detail>` (odděleno ·), `<forma>`, `<velikost>`, `<sarze>`.
 - **Výchozí účtenka** neobsahuje DPH ani poznámku; **IČO a DIČ** se vytisknou jen když jsou vyplněné v Provozovně.
+
+### Diagnostika a logy
+
+Sekce **Diagnostika a logy** (Nastavení) zobrazuje log soubor aplikace. Log se vždy ukládá do:
+
+```
+Dokumenty\WellSale\log-wellsale.log
+```
+
+Tlačítkem **Načíst log** zobrazíte posledních 500 řádků přímo v aplikaci. **Stáhnout log** uloží kopii kamkoli na disk. **Otevřít složku** (ikona 📁) otevře složku s logem v Průzkumníku.
 
 ### Fronty a Stav systému
 - **Fronty:** přehled čekajících operací (tisk, upload uzávěrek, NTFY) — položku lze odebrat nebo celou frontu zkusit znovu. Tisk, který selže (offline tiskárna), se sem uloží a zopakuje — účtenka se neztratí.
@@ -114,7 +173,10 @@ Admin může vytvářet uživatele s vlastním PINem a sadou oprávnění (tlač
 Tlačítko „Skrýt částky" rozostří peněžní hodnoty (vhodné při sdílení obrazovky). Hodnoty se nemažou — po vypnutí jsou hned čitelné. Checkboxy určují oblasti (Analýza / Historie / Uzávěrky) a jsou aktivní, **jen když je „Skrýt částky" zapnuté**.
 
 ### Automatické uzamčení
-Po zadaném počtu minut nečinnosti aplikace znovu vyžádá PIN (jen když je PIN zapnutý).
+Po zadaném počtu minut nečinnosti aplikace znovu vyžádá PIN (jen když je PIN zapnutý). **Hodnota 0 = nikdy nezamknout.**
+
+### Debug mód
+V Nastavení → Pokročilé lze zapnout Debug mód. Po zapnutí se **F12 / Ctrl+Shift+I / Ctrl+Shift+U** otevřou vývojářské nástroje — **pouze pro adminy** (nebo uživatele s oprávněním „Správa uživatelů").
 
 ---
 
@@ -140,7 +202,30 @@ Přetáhněte soubor uzávěrky (`.wsbak`/`.db`) do okna → „Přidat do uzáv
 
 ---
 
-## 9. Co dělat v různých situacích
+## 9. Chybové zprávy — co znamenají
+
+Pokud se zobrazí chyba (toast v rohu obrazovky nebo dialog), zde je přehled nejčastějších kódů:
+
+| Kód / zpráva | Co to znamená | Co udělat |
+|---|---|---|
+| **Databáze se probouzí** (`db_warming`) | Cloud databáze se pomalu spouští po nečinnosti (cca 10–30 s). | Počkejte 30 sekund a zkuste znovu. Netřeba panikovat. |
+| **Offline** (`offline`) | Aplikace nemá internet. | Zkontrolujte připojení. Prodej funguje i offline, cloud operace ne. |
+| **Chyba sítě** (`network_error`) | Přechodná síťová chyba. | Zkuste za chvíli znovu. |
+| **Spojení vypršelo** (`timeout`) | Server neodpověděl včas. | Zkuste za chvíli znovu. |
+| **Platnost přihlášení vypršela** (`invalid_token`, `missing_token`) | Autentizační token pro cloud vypršel. | Restartujte aplikaci — token se obnoví automaticky. |
+| **Licence vypršela** (`license_expired`) | Platnost licence WellSale skončila. | Kontaktujte podporu pro prodloužení. |
+| **Licence zrušena** (`license_revoked`) | Licence byla administrátorem deaktivována. | Kontaktujte dodavatele. |
+| **Databáze nedovoleně upravena** (`tamper_detected`) | Někdo ručně editoval soubor databáze. | Kontaktujte podporu. Aplikace se zamkne. |
+| **Jiný počítač** (`hwid_mismatch`) | Při offline provozu nesedí ID stroje se serverovým záznamem. | Obnovte internet — online ověření HWID problém vyřeší. Nebo kontaktujte podporu. |
+| **Chyba ověření požadavku** (`bad_signature`, `missing_signature`) | Chyba při podpisu cloudového požadavku (migrace klíče). | Restartujte aplikaci — klíč se opraví automaticky. Pokud přetrvá, kontaktujte podporu. |
+| **Instalace odebrána** (`install_removed`) | Admin v portálu odebral tuto instalaci. | Aplikace se pokusí automaticky reaktivovat. Pokud selže, kontaktujte podporu. |
+| **Chybí šifrovací klíč** (`no_key`) | Aplikace nemá klíč pro otevření databáze. | Zkontrolujte internet (klíč se stahuje z cloudu). Kontaktujte podporu. |
+| **Není aktivována** (`not_activated`) | Nemáte zadaný licenční klíč. | Projděte průvodcem nastavením. |
+| **Nedostatek paměti** (`oom`) | Aplikaci dochází operační paměť. | Zavřete ostatní aplikace (prohlížeč, Cursor). Zapněte „Slabý stroj" v nastavení. |
+
+---
+
+## 10. Co dělat v různých situacích
 
 | Situace | Co udělat |
 |---|---|
@@ -149,13 +234,15 @@ Přetáhněte soubor uzávěrky (`.wsbak`/`.db`) do okna → „Přidat do uzáv
 | „Licence svázána s jiným počítačem" | Data nelze přenést jen zkopírováním složky. Pro převod na nové PC kontaktujte podporu. |
 | Tiskárna netiskne | Otevřete Přehled stavu (Health) — stav tiskárny. Zkontrolujte připojení a v Nastavení → Tiskárna proveďte testovací tisk. |
 | Chci skrýt tržby při sdílení obrazovky | Nastavení → Soukromí → „Skrýt částky". |
-| Potřebuju poslat log podpoře | Nastavení → Diagnostika → „Stáhnout log". |
+| Potřebuju poslat log podpoře | Nastavení → Diagnostika → „Stáhnout log". Log je v `Dokumenty\WellSale\log-wellsale.log`. |
 | Červené upozornění „omezený režim" | Nastala chyba databáze. Aplikace běží dál; kontaktujte podporu a pošlete log. |
 | Přechod na nový počítač | Vytvořte zálohu, kontaktujte podporu kvůli převodu licence, na novém PC obnovte ze zálohy. |
+| Aplikace šla do černé obrazovky / PIN screenu | Nejde o chybu — je to automatické zamčení (PIN po nečinnosti). Přihlaste se PINem. Pokud se to děje příliš brzy, nastavte delší čas nebo 0 (nikdy) v Nastavení → Automatické uzamčení. |
+| Spotřeba paměti vysoká, aplikace pomalá | Zapněte „Slabý stroj" v Nastavení → Výkon. Zavřete jiné aplikace. |
 
 ---
 
-## 10. Bezpečnostní doporučení
+## 11. Bezpečnostní doporučení
 
 - **Pravidelně zálohujte** (ideálně zapněte cloud zálohy) — záloha `.wsbak` je jediná spolehlivá cesta k obnově dat.
 - **Nemažte pobočku ani licenci** bez předchozí zálohy.
@@ -165,7 +252,7 @@ Přetáhněte soubor uzávěrky (`.wsbak`/`.db`) do okna → „Přidat do uzáv
 
 ---
 
-## 11. Jak funguje podepisování skladových pohybů?
+## 12. Jak funguje podepisování skladových pohybů?
 
 # E‑podpis evidence — technický popis
 
@@ -302,5 +389,16 @@ Do `signature` se ukládá **Base64 RSA‑SHA256 (PKCS#1 v1.5) podpisu UTF‑8 �
 `cert_thumbprint` **otisk certifikátu** podepisujícího — dohromady dokazují
 **kdo** zápis provedl a že se **od té doby nezměnil**.
 
+---
+
+## 7. Jak prevest popdis na jiny pocitac:
+Samotný soubor certifikátu, který přišel e-mailem (.cer, .crt apod.), neobsahuje soukromý klíč, takže na jiném počítači s ním nelze podepisovat. Soukromý klíč zůstává na počítači, kde byla žádost vytvořena pomocí iSignum/iPostSignum.
+
+Pokud máš stále přístup k původnímu počítači, udělej toto:
+
+Na původním počítači, kde certifikát funguje, spusť iSignum.
+Proveď zálohu certifikátu včetně soukromého klíče (obvykle do souboru .pfx nebo .p12) a nastav silné heslo.
+Přenes tento soubor na nový počítač.
+Na novém počítači importuj .pfx a zadej heslo.
 
 *V případě dotazů kontaktujte dodavatele aplikace.*
