@@ -23,6 +23,8 @@ Při prvním spuštění se otevře **průvodce nastavením**. Projdete těmito 
 
 > Po dokončení se aplikace spustí a přihlásíte se PINem (pokud je PIN zapnutý). PIN píšete **rovnou** — první účet je předvybraný, takže nemusíte nejdřív klikat na uživatele. Při více účtech jdou ostatní vybrat dole.
 
+> **Existující zákazník** by se do průvodce neměl dostat náhodou — aplikace rozpozná data v databázi a průvodce přeskočí. Pokud kontrola dočasně selže (např. chyba systému), zobrazí se obrazovka s chybou a tlačítkem **Zkusit znovu**, ne prázdný průvodce.
+
 ---
 
 ## 2. Orientace v aplikaci
@@ -72,7 +74,13 @@ Tlačítkem **Obnovit** (⟳) v panelu znovu načtete oznámení ze serveru. Kli
 
 **Dlaždice produktů:** pod názvem se šedě zobrazuje **forma · velikost · šarže** (jen vyplněné údaje). Dlaždici lze obarvit a zařadit do **kategorie** (záložky nad plochou) v editaci produktu. Tlačítkem **Uspořádat** dlaždice přetáhnete za horní úchyt do jiného pořadí.
 
-**Zákaznický displej:** je-li zapnutý druhý monitor (Nastavení → Zákaznický displej), zákazník vidí košík a celkovou částku, a při platbě QR kód / částku k úhradě hotově. Když v nastavení vyplníte **IBAN**, QR se vygeneruje **automaticky na váš účet a na aktuální částku košíku** (QR Platba / SPAYD) — zákazník jen naskenuje a má předvyplněnou částku.
+**Zákaznický displej:** je-li zapnutý druhý monitor (Nastavení → Zákaznický displej), zákazník vidí košík a celkovou částku, a při platbě QR kód / částku k úhradě hotově. Když v nastavení vyplníte **IBAN** (Nastavení → Provozovna / platba), QR se vygeneruje **automaticky na váš účet a na aktuální částku košíku** (QR Platba / SPAYD) — zákazník jen naskenuje a má předvyplněnou částku.
+
+**IBAN a QR Platba — důležité:**
+- IBAN **zkopírujte celý z internetového bankovnictví** — i malá chyba na konci způsobí, že bankovní aplikace hlásí „QR kód neúplný" nebo platbu odmítne.
+- Místo IBAN lze zadat **české číslo účtu** (např. `123456789/0100`) — aplikace ho převede na IBAN.
+- Pokud IBAN není platný, QR se **negeneruje** a u pole se zobrazí varování (lepší než nefunkční kód v bankovní aplikaci).
+- QR se zobrazí na pokladně i na zákaznickém displeji, jakmile je IBAN v pořádku a zvolíte platbu QR.
 
 ---
 
@@ -94,7 +102,7 @@ V sekci Sklad → „Generovat hlášení (PDF)" + výběr roku. Podává se na 
 ## 5. Historie a Uzávěrka
 
 - **Historie** — seznam transakcí. Lze **upravit** položku, **vytisknout** znovu, vygenerovat **fakturu (PDF)** a exportovat do Excelu.
-- **Smazané transakce** — transakce lze „měkce" smazat (tlačítkem Smazat v detailu). Nesmaže se z databáze, jen se skryje. Zaškrtnutím **Zobrazit smazané** v historii uvidíte smazané transakce s červeným rámečkem — jen pro referenci. Smazané transakce se nepočítají do uzávěrek, exportů ani analytiky.
+- **Smazané transakce** — transakce lze „měkce" smazat (tlačítkem Smazat v detailu). Nesmaže se z databáze, jen se skryje. Zaškrtnutím **Zobrazit smazané** v historii uvidíte smazané transakce s červeným rámečkem — jen pro referenci. U smazané transakce lze tlačítkem **Vrátit** obnovit do běžné historie (znovu se počítá do uzávěrek a exportů). Smazané transakce se nepočítají do uzávěrek, exportů ani analytiky, dokud je nevrátíte.
 - **Uzávěrka** — souhrn dne. Tlačítkem **Uzavřít dnešní den** vytvoříte uzávěrku (a nahraje se na cloud, pokud je zapnutý). Můžete exportovat **evidenční knihu PML (PDF)**.
 - **Pokladní pohyby** (vklad/výdaj hotovosti) — pokud jsou zapnuté.
 
@@ -124,6 +132,18 @@ Nastavení otevřete **ozubeným kolem** vpravo nahoře (nebo zkratkou ve spodn�
 - **Komunikace:** NTFY oznámení, Tiskárna, Provozovna (IČO/DIČ/povolení PML), Počasí.
 - **Systém:** Aktualizace, Automatické uzamčení (PIN po nečinnosti — **0 minut = nikdy nezamknout**), Kurz EUR/CZK, PML export XML, Audit log, Diagnostika.
 - **Elektronický podpis** + **Stav systému** + **Fronty** + **Cloudové zálohy** + **Zálohy** (lokální/cloud/Drive).
+
+### Elektronický podpis — ověření a soubory
+
+V sekci **Elektronický podpis** (Nastavení):
+
+- **Podepsat soubor** — podepíše vybraný soubor (PDF/XML → odpojený podpis `.p7s`, XML export → XMLDSig).
+- **Zkontrolovat podpis** — dialog se třemi režimy:
+  1. **Dokument (soubor)** — přetáhněte nebo vyberte soubor; ověří se XMLDSig, `.p7s` (PKCS#7) nebo záložní `.wssig.json`.
+  2. **Skladový pohyb** — vyhledáte pohyb podle ID nebo data; uvidíte, zda podpis sedí, kdo podepsal a platnost certifikátu.
+  3. **Transakce** — totéž pro prodej; pokud existuje související skladový pohyb, v detailu je **odkaz na jeho podpis** (a opačně z pohybu na transakci).
+
+> U PDF a exportů z uzávěrky/PML se standardně ukládá **`.p7s`** vedle souboru — to je formát, který banky a úřady očekávají. `.wssig.json` je jen záložní, když HW token momentálně není k dispozici.
 - **Šablony prodejen** — export/import konfigurace (produkty, dodavatelé, základní nastavení) pro sdílení mezi pobočkami.
 - Dole **Poděkování** (open-source knihovny) a odkazy **wellsale.cz** / **Online administrace**.
 
@@ -195,6 +215,8 @@ Při obnově (z cloudu nebo přetažením souboru do okna) se otevře náhled ob
 1. **Přepsat ze zálohy** — nahradí aktuální data obsahem zálohy. *(Aplikace se restartuje.)*
 2. **Sloučit (přidat)** — **nic se nemaže**. Data ze zálohy se **přidají** k vašim. U položek, které se překrývají (nastavení, produkty, dodavatelé, uživatelé, uzávěrky), si vyberete, co nechat — **svoje**, nebo **ze zálohy**. Historie (transakce, pohyby skladu…) se přidá bez duplicit.
 
+> Před sloučením aplikace vytvoří **bezpečnostní kopii** aktuální databáze. Pokud se kopii nepodaří uložit, sloučení se **neprovede** — vaše data zůstanou nedotčená.
+
 > Při obnově z **jiné licence** se identita (licence, pobočka) automaticky ponechá vaše — nedojde k odhlášení ani neshodě.
 
 ### Přidání uzávěrky ze zálohy
@@ -222,6 +244,7 @@ Pokud se zobrazí chyba (toast v rohu obrazovky nebo dialog), zde je přehled ne
 | **Chybí šifrovací klíč** (`no_key`) | Aplikace nemá klíč pro otevření databáze. | Zkontrolujte internet (klíč se stahuje z cloudu). Kontaktujte podporu. |
 | **Není aktivována** (`not_activated`) | Nemáte zadaný licenční klíč. | Projděte průvodcem nastavením. |
 | **Nedostatek paměti** (`oom`) | Aplikaci dochází operační paměť. | Zavřete ostatní aplikace (prohlížeč, Cursor). Zapněte „Slabý stroj" v nastavení. |
+| **Neplatný IBAN** (varování u QR platby) | IBAN nesedí kontrolní součet — banka QR odmítne. | Zkopírujte IBAN znovu z banky celý, nebo zadejte číslo účtu ve formátu `číslo/kód banky`. |
 
 ---
 
@@ -236,6 +259,8 @@ Pokud se zobrazí chyba (toast v rohu obrazovky nebo dialog), zde je přehled ne
 | Chci skrýt tržby při sdílení obrazovky | Nastavení → Soukromí → „Skrýt částky". |
 | Potřebuju poslat log podpoře | Nastavení → Diagnostika → „Stáhnout log". Log je v `Dokumenty\WellSale\log-wellsale.log`. |
 | Červené upozornění „omezený režim" | Nastala chyba databáze. Aplikace běží dál; kontaktujte podporu a pošlete log. |
+| Červený banner „obnova databáze" / neshoda klíče | Aplikace vytvořila novou prázdnou databázi, ale **stará data jsou uložená** v souboru `cashier.db.unreadable-…` ve složce aplikace. | Obnovte ze zálohy `.wsbak` (Nastavení → Zálohy) nebo kontaktujte podporu — data nejsou smazaná. |
+| Průvodce nastavením se neotevře, jen chyba | Dočasná chyba kontroly — aplikace **záměrně** neukáže prázdný průvodce. | Klikněte **Zkusit znovu**; pokud přetrvá, restartujte PC a pošlete log podpoře. |
 | Přechod na nový počítač | Vytvořte zálohu, kontaktujte podporu kvůli převodu licence, na novém PC obnovte ze zálohy. |
 | Aplikace šla do černé obrazovky / PIN screenu | Nejde o chybu — je to automatické zamčení (PIN po nečinnosti). Přihlaste se PINem. Pokud se to děje příliš brzy, nastavte delší čas nebo 0 (nikdy) v Nastavení → Automatické uzamčení. |
 | Spotřeba paměti vysoká, aplikace pomalá | Zapněte „Slabý stroj" v Nastavení → Výkon. Zavřete jiné aplikace. |
@@ -246,6 +271,7 @@ Pokud se zobrazí chyba (toast v rohu obrazovky nebo dialog), zde je přehled ne
 
 - **Pravidelně zálohujte** (ideálně zapněte cloud zálohy) — záloha `.wsbak` je jediná spolehlivá cesta k obnově dat.
 - **Nemažte pobočku ani licenci** bez předchozí zálohy.
+- U **QR Platby** vždy ověřte, že IBAN v nastavení nemá varování — jinak banka platbu nepřijme.
 - Pro elektronický podpis používejte **kvalifikovaný (QES)** certifikát.
 - Zapněte **PIN** a **automatické uzamčení** na pokladně přístupné více lidem.
 - Uchovávejte evidenci a zálohy **5 let** (PML požadavek).
@@ -363,15 +389,20 @@ protože nese i veřejný certifikát podepisujícího:
 Celý XML soubor je navíc podepsaný **XMLDSig** (enveloped, SHA‑256) — dvě vrstvy:
 podpisy jednotlivých záznamů + jeden podpis přes celý dokument.
 
+**PDF soubory** (evidenční kniha, PML hlášení): vedle souboru se ukládá odpojený podpis **`.p7s`**
+(PKCS#7) — standardní formát pro ověření v Adobe Readeru nebo u úřadů. Záložní `.wssig.json`
+se použije jen když HW token není dostupný.
+
 ---
 
 ## 5. Ověření a odhalení padělku
 
-```
+V aplikaci: **Nastavení → Elektronický podpis → Zkontrolovat podpis** (viz sekce 7 výše).
+
+Technicky:
 1. vezmi `podepsanaData`  →  UTF-8 bajty
 2. spočítej SHA-256
 3. RSA-ověř veřejným klíčem z `certifikat`  proti  `hodnota`
-```
 
 - **Sedí** → záznam je pravý a od podpisu **nezměněný**, podepsal ho držitel daného certifikátu.
 - **Nesedí** → s daty se manipulovalo (nebo nesedí klíč).
