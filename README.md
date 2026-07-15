@@ -78,7 +78,6 @@ Tlačítkem **Obnovit** (⟳) v panelu znovu načtete oznámení ze serveru. Kli
 
 **IBAN a QR Platba — důležité:**
 - IBAN **zkopírujte celý z internetového bankovnictví** — i malá chyba na konci způsobí, že bankovní aplikace hlásí „QR kód neúplný" nebo platbu odmítne.
-- Místo IBAN lze zadat **české číslo účtu** (např. `123456789/0100`) — aplikace ho převede na IBAN.
 - Pokud IBAN není platný, QR se **negeneruje** a u pole se zobrazí varování (lepší než nefunkční kód v bankovní aplikaci).
 - QR se zobrazí na pokladně i na zákaznickém displeji, jakmile je IBAN v pořádku a zvolíte platbu QR.
 
@@ -244,7 +243,7 @@ Pokud se zobrazí chyba (toast v rohu obrazovky nebo dialog), zde je přehled ne
 | **Chybí šifrovací klíč** (`no_key`) | Aplikace nemá klíč pro otevření databáze. | Zkontrolujte internet (klíč se stahuje z cloudu). Kontaktujte podporu. |
 | **Není aktivována** (`not_activated`) | Nemáte zadaný licenční klíč. | Projděte průvodcem nastavením. |
 | **Nedostatek paměti** (`oom`) | Aplikaci dochází operační paměť. | Zavřete ostatní aplikace (prohlížeč, Cursor). Zapněte „Slabý stroj" v nastavení. |
-| **Neplatný IBAN** (varování u QR platby) | IBAN nesedí kontrolní součet — banka QR odmítne. | Zkopírujte IBAN znovu z banky celý, nebo zadejte číslo účtu ve formátu `číslo/kód banky`. |
+| **Neplatný IBAN** (varování u QR platby) | IBAN nesedí kontrolní součet — banka QR odmítne. | Zkopírujte IBAN znovu celý z internetového bankovnictví. |
 
 ---
 
