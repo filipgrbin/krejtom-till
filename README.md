@@ -282,149 +282,44 @@ Pokud se zobrazí chyba (toast v rohu obrazovky nebo dialog), zde je přehled ne
 
 ## 12. Jak funguje podepisování skladových pohybů?
 
-# E‑podpis evidence — technický popis
+### Co vyžaduje zákon / vyhláška
 
-> Jak WellSale elektronicky podepisuje **skladové pohyby** a **transakce**: co se
-> ukládá do DB, co přesně se podepisuje, jakým algoritmem a jak se to ověří.
-> Právní rámec: **vyhláška 147/2025 Sb. § 4** (uznávaný el. podpis pracovníka,
-> který zápis provedl).
+Podle **vyhlášky č. 147/2025 Sb. § 4 odst. 3** musí být u elektronické evidence
+PML **každý zápis opatřen uznávaným elektronickým podpisem** oprávněné osoby
+(pracovníka, který zápis provedl). U jednotlivých typů evidence (distribuce,
+uvádění na trh…) je totéž výslovně mezi povinnými poli záznamu.
 
----
+**Uznávaný elektronický podpis** (zákon č. **297/2016 Sb.**) = zaručený el. podpis
+založený na **kvalifikovaném certifikátu**, nebo kvalifikovaný el. podpis (QES) —
+typicky PostSignum / I.CA na USB tokenu.
 
-## 1. Co se uloží do databáze
+Vyhláška **neříká**, jak přesně má vypadat Base64 v XML — to je technika aplikace.
+Říká jen: každý pohyb musí být takto podepsán.
 
-Každý podepisovaný řádek (`stock_movements`, `transactions`) má dva sloupce:
+### Co dělá WellSale (stručně)
 
-| sloupec | typ | obsah |
-|---|---|---|
-| `signature` | TEXT | **Base64** surových bajtů RSA podpisu |
-| `cert_thumbprint` | TEXT | **otisk certifikátu** (hex, SHA‑1 z certifikátu) — identifikuje, kterým certem (= kým) byl řádek podepsán |
+1. Po každém prodeji / skladovém pohybu se **na pozadí** vytvoří digitální podpis
+   certifikátem přihlášeného pracovníka (nebo výchozím certem z Nastavení).
+2. Podepisuje se krátký text záznamu, např. u skladu:
+   `SM|<id>|<produkt>|<množství>|<typ>|<čas>|<stav zásob>`.
+3. V exportu PML XML u každého řádku najdete:
+   - **`<hodnota>` (Base64)** — samotný kryptografický podpis (ne „obsah zápisu“,
+     jen zakódované bajty RSA podpisu nad tím textem),
+   - **`<certThumbprint>`** — otisk certifikátu = **kdo** podepsal,
+   - **`<podepsanaData>`** — přesně text, který byl podepsán (pro kontrolu).
 
-> `signature` **není** hash ani heslo — je to skutečný kryptografický podpis,
-> ověřitelný veřejným klíčem certifikátu. `cert_thumbprint` říká „čí klíč to byl".
+Ověření v aplikaci: **Nastavení → Elektronický podpis → Zkontrolovat podpis**.
 
----
+Úplný technický popis (algoritmus, vzorec Base64, PowerShell, XML):
+soubor **`e-podpis-technicky.md`** v kořeni projektu. Mapování na paragrafy vyhlášky:
+**`pml-compliance.md`**.
 
-## 2. Co přesně se podepisuje (kanonický řetězec)
-
-Nepodepisuje se celý DB řádek, ale **deterministicky složený textový řetězec**
-z klíčových polí. Díky pevnému pořadí a oddělovači `|` dá stejný zápis vždy
-stejná data → stejný podpis.
-
-**Skladový pohyb** (`_esignMovementData`):
-```
-SM|<id>|<product_id>|<delta>|<kind>|<created_at>|<stock_after>
-```
-Příklad:
-```
-SM|412|37|-3|sale|2026-06-27T10:15:00.000Z|18
-```
-
-**Transakce** (`_esignTransactionData`):
-```
-TX|<id>|<total>|<payment_method>|<created_at>|<itemCount>
-```
-Příklad:
-```
-TX|987|450|cash|2026-06-27T10:15:00.000Z|3
-```
+**PDF** (evidenční kniha, hlášení): vedle souboru bývá odpojený podpis **`.p7s`**.
 
 ---
 
-## 3. Jak vzniká podpis
+### Jak převést podpis na jiný počítač
 
-Probíhá **na pozadí** (`setImmediate`) hned po vytvoření pohybu/transakce, certem
-**pracovníka**, který zápis provedl (per‑účet `users.cert_thumbprint`; fallback na
-globálně detekovaný cert). Vlastní podpis dělá PowerShell nad Windows úložištěm
-certifikátů (`_esignSignData`):
-
-```powershell
-$c   = Get-Item Cert:\CurrentUser\My\<thumbprint>        # certifikát (klíč může být na USB tokenu)
-$rsa = [RSACertificateExtensions]::GetRSAPrivateKey($c)   # privátní klíč
-$b   = [Text.Encoding]::UTF8.GetBytes('SM|412|37|-3|...') # UTF-8 bajty kanonického řetězce
-$s   = $rsa.SignData($b,
-         [HashAlgorithmName]::SHA256,
-         [RSASignaturePadding]::Pkcs1)                     # RSA podpis nad SHA-256, padding PKCS#1 v1.5
-[Convert]::ToBase64String($s)                             # → uloží se do sloupce `signature`
-```
-
-Tedy obsah sloupce `signature`:
-```
-Base64( RSASSA-PKCS1-v1_5( SHA256( UTF8(kanonický_řetězec) ) ) )
-```
-
-| parametr | hodnota |
-|---|---|
-| hashovací funkce | **SHA‑256** |
-| podpisové schéma | **RSA, PKCS#1 v1.5** (`SHA256withRSA`) |
-| kódování dat | **UTF‑8** |
-| výstup | **Base64** (u 2048bit RSA ≈ 344 znaků) |
-| klíč | privátní klíč certifikátu (typicky PostSignum na USB tokenu) |
-
-Uložení: `db.updateMovementSignature(id, signature, thumbprint)` /
-`db.updateTransactionSignature(...)`.
-
----
-
-## 4. Jak to vypadá v PML exportu (XML)
-
-U záznamu je **samonosný** blok `<elektronickyPodpis>` — ověřitelný i **offline**,
-protože nese i veřejný certifikát podepisujícího:
-
-```xml
-<elektronickyPodpis>
-  <algoritmus>SHA256withRSA (PKCS#1 v1.5)</algoritmus>
-  <!-- otisk certifikátu (thumbprint) -->
-  <podepsanaData>SM|412|37|-3|sale|2026-06-27T10:15:00.000Z|18</podepsanaData>
-  <hodnota>BASE64_PODPISU…</hodnota>
-  <certifikat format="base64-DER">MIID… (veřejný certifikát podepisujícího)</certifikat>
-</elektronickyPodpis>
-```
-
-| element | význam |
-|---|---|
-| `algoritmus` | použité schéma |
-| `podepsanaData` | přesně to, co bylo podepsáno (kanonický řetězec) |
-| `hodnota` | Base64 podpis (totéž co sloupec `signature`) |
-| `certifikat` | veřejný klíč podepisujícího (vložený → ověření nepotřebuje úložiště) |
-
-Celý XML soubor je navíc podepsaný **XMLDSig** (enveloped, SHA‑256) — dvě vrstvy:
-podpisy jednotlivých záznamů + jeden podpis přes celý dokument.
-
-**PDF soubory** (evidenční kniha, PML hlášení): vedle souboru se ukládá odpojený podpis **`.p7s`**
-(PKCS#7) — standardní formát pro ověření v Adobe Readeru nebo u úřadů. Záložní `.wssig.json`
-se použije jen když HW token není dostupný.
-
----
-
-## 5. Ověření a odhalení padělku
-
-V aplikaci: **Nastavení → Elektronický podpis → Zkontrolovat podpis** (viz sekce 7 výše).
-
-Technicky:
-1. vezmi `podepsanaData`  →  UTF-8 bajty
-2. spočítej SHA-256
-3. RSA-ověř veřejným klíčem z `certifikat`  proti  `hodnota`
-
-- **Sedí** → záznam je pravý a od podpisu **nezměněný**, podepsal ho držitel daného certifikátu.
-- **Nesedí** → s daty se manipulovalo (nebo nesedí klíč).
-
-**Příklad padělku:** kdokoli v DB změní `delta` z `-3` na `-5` → kanonický řetězec
-je `SM|412|37|-5|sale|...` → jiný SHA‑256 → podpis **neprojde**. A `cert_thumbprint`
-prozradí, čí klíč měl záznam podepsat.
-
----
-
-## 6. Shrnutí jednou větou
-
-Do `signature` se ukládá **Base64 RSA‑SHA256 (PKCS#1 v1.5) podpisu UTF‑8 řetězce**
-`SM|id|product_id|delta|kind|created_at|stock_after` (u transakcí `TX|…`), do
-`cert_thumbprint` **otisk certifikátu** podepisujícího — dohromady dokazují
-**kdo** zápis provedl a že se **od té doby nezměnil**.
-
----
-
-## 7. Jak prevest popdis na jiny pocitac:
 Samotný soubor certifikátu, který přišel e-mailem (.cer, .crt apod.), neobsahuje soukromý klíč, takže na jiném počítači s ním nelze podepisovat. Soukromý klíč zůstává na počítači, kde byla žádost vytvořena pomocí iSignum/iPostSignum.
 
 Pokud máš stále přístup k původnímu počítači, udělej toto:
