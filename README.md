@@ -1,7 +1,12 @@
-# WellSale — uživatelská příručka
+# WellSale — dokumentace (uživatelská příručka, e‑podpis, compliance)
 
 Pokladní systém pro prodejny s regulovaným zbožím (PML / kratom dle vyhl. 147/2025 Sb.).
-Tato příručka vás provede od prvního spuštění až po každodenní práci.
+
+| Část | Obsah |
+|---|---|
+| § 1–11 | každodenní práce s aplikací |
+| § 12 | elektronický podpis evidence (právo + technika) |
+| § 13 | mapování vyhlášky 147/2025 na funkce WellSale |
 
 ---
 
@@ -280,53 +285,230 @@ Pokud se zobrazí chyba (toast v rohu obrazovky nebo dialog), zde je přehled ne
 
 ---
 
-## 12. Jak funguje podepisování skladových pohybů?
+## 12. Elektronický podpis evidence (právo + technika)
 
-### Co vyžaduje zákon / vyhláška
+> Tato kapitola spojuje právní požadavek, uživatelský postup i technický popis
+> (dříve samostatné soubory `e-podpis-technicky.md` a část o podpisu v příručce).
+> Mapování celé vyhlášky na funkce aplikace je v **§ 13**.
 
-Podle **vyhlášky č. 147/2025 Sb. § 4 odst. 3** musí být u elektronické evidence
-PML **každý zápis opatřen uznávaným elektronickým podpisem** oprávněné osoby
-(pracovníka, který zápis provedl). U jednotlivých typů evidence (distribuce,
-uvádění na trh…) je totéž výslovně mezi povinnými poli záznamu.
+### 12.1 Co říká legislativa
 
-**Uznávaný elektronický podpis** (zákon č. **297/2016 Sb.**) = zaručený el. podpis
-založený na **kvalifikovaném certifikátu**, nebo kvalifikovaný el. podpis (QES) —
-typicky PostSignum / I.CA na USB tokenu.
+Zdroj vyhlášky: [zakonyprolidi.cz/cs/2025-147](https://www.zakonyprolidi.cz/cs/2025-147)
 
-Vyhláška **neříká**, jak přesně má vypadat Base64 v XML — to je technika aplikace.
-Říká jen: každý pohyb musí být takto podepsán.
+**§ 4 odst. 3 — elektronická evidence (klíčové):**
 
-### Co dělá WellSale (stručně)
+> Při elektronické evidenci je nutno zabezpečit, aby zápisy do evidence o nakládání
+> s psychomodulačními látkami prováděly pouze osoby k tomu oprávněné s tím, že je
+> třeba zajistit, aby **každý zápis byl opatřen uznávaným elektronickým podpisem**.
+
+| ustanovení | požadavek |
+|---|---|
+| § 4(2) | opravy se zachováním původního obsahu + datum + **podpis** osoby, která opravu provedla |
+| § 4(5) | zápis v den skutečnosti |
+| § 4(6) | okamžitý jednotný výstup **.xml** + tiskový výstup |
+| § 3(3) | (listinná kniha) zápis v den + podpis; u el. evidence platí § 4 |
+| § 10 písm. n) / § 11 písm. n) atd. | u jednotlivých činností je mezi povinnými poli výslovně **„uznávaný elektronický podpis osoby, která zápis provedla“** |
+| § 5(3) e) | evidence poruch systému — také s podpisem zapisující osoby |
+
+**Uznávaný elektronický podpis** (zákon č. **297/2016 Sb.** § 6 odst. 2) = zaručený
+el. podpis na **kvalifikovaném certifikátu**, nebo kvalifikovaný el. podpis (QES).
+Prakticky: PostSignum / I.CA / eIdentity — ideálně QES na USB tokenu. Self-signed nestačí.
+
+Vyhláška **neříká**, jaký má být formát bajtů (Base64, RSA, tvar XML). Říká jen:
+**každý zápis = uznávaný el. podpis oprávněné osoby**. Tvar `SM|…`, RSA-SHA256 a
+Base64 jsou **technická rozhodnutí WellSale**, aby šel požadavek splnit ověřitelně
+a exportovat do XML (§ 4(6)).
+
+### 12.2 Co dělá WellSale (uživatelsky)
 
 1. Po každém prodeji / skladovém pohybu se **na pozadí** vytvoří digitální podpis
    certifikátem přihlášeného pracovníka (nebo výchozím certem z Nastavení).
-2. Podepisuje se krátký text záznamu, např. u skladu:
-   `SM|<id>|<produkt>|<množství>|<typ>|<čas>|<stav zásob>`.
-3. V exportu PML XML u každého řádku najdete:
-   - **`<hodnota>` (Base64)** — samotný kryptografický podpis (ne „obsah zápisu“,
-     jen zakódované bajty RSA podpisu nad tím textem),
-   - **`<certThumbprint>`** — otisk certifikátu = **kdo** podepsal,
-   - **`<podepsanaData>`** — přesně text, který byl podepsán (pro kontrolu).
+2. Podepisuje se krátký kanonický text záznamu (viz níže).
+3. V exportu PML XML u každého řádku je blok `<elektronickyPodpis>` s
+   `<hodnota>` (Base64 RSA podpis), `<certThumbprint>` (kdo) a `<podepsanaData>`.
+4. **PDF** (evidenční kniha, hlášení): vedle souboru bývá odpojený podpis **`.p7s`**.
 
-Ověření v aplikaci: **Nastavení → Elektronický podpis → Zkontrolovat podpis**.
+Ověření: **Nastavení → Elektronický podpis → Zkontrolovat podpis**
+(dokument / skladový pohyb / transakce).
 
-Úplný technický popis (algoritmus, vzorec Base64, PowerShell, XML):
-soubor **`e-podpis-technicky.md`** v kořeni projektu. Mapování na paragrafy vyhlášky:
-**`pml-compliance.md`**.
+### 12.3 Co se uloží do databáze
 
-**PDF** (evidenční kniha, hlášení): vedle souboru bývá odpojený podpis **`.p7s`**.
+| sloupec | typ | obsah |
+|---|---|---|
+| `signature` | TEXT | **Base64** surových bajtů RSA podpisu |
+| `cert_thumbprint` | TEXT | otisk certifikátu (hex) — **kým** byl řádek podepsán |
+
+`signature` není hash ani heslo — je to kryptografický podpis ověřitelný veřejným
+klíčem certifikátu.
+
+### 12.4 Kanonický řetězec (co se podepisuje)
+
+**Skladový pohyb** (`_esignMovementData`):
+```
+SM|<id>|<product_id>|<delta>|<kind>|<created_at>|<stock_after>
+```
+Příklad: `SM|412|37|-3|sale|2026-07-16 10:15:00|18`
+
+**Transakce** (`_esignTransactionData`):
+```
+TX|<id>|<total>|<payment_method>|<created_at>|<itemCount>
+```
+Příklad: `TX|987|450|cash|2026-07-16 10:15:00|3`
+
+### 12.5 Z čeho je Base64 (`signature` / `<hodnota>`)
+
+```
+1) kanonický text   =  "SM|412|37|-3|sale|2026-07-16 10:15:00|18"
+2) UTF-8 bajty
+3) SHA-256 (uvnitř SignData)
+4) RSA podpis privátním klíčem (PKCS#1 v1.5)
+5) Base64 → sloupec signature / <hodnota>
+```
+
+Jedna řádka: `Base64( RSASSA-PKCS1-v1_5( SHA256( UTF8(kanonický_řetězec) ) ) )`
+
+| parametr | hodnota |
+|---|---|
+| hash | **SHA‑256** |
+| schéma | **RSA, PKCS#1 v1.5** |
+| kódování | **UTF‑8** |
+| výstup | **Base64** (u 2048bit RSA ≈ 344 znaků) |
+
+Thumbprint do Base64 **nevstupuje** — ukládá se vedle.
+
+PowerShell (zjednodušeně):
+```powershell
+$c   = Get-Item Cert:\CurrentUser\My\<thumbprint>
+$rsa = [RSACertificateExtensions]::GetRSAPrivateKey($c)
+$b   = [Text.Encoding]::UTF8.GetBytes('SM|412|37|-3|...')
+$s   = $rsa.SignData($b, [HashAlgorithmName]::SHA256, [RSASignaturePadding]::Pkcs1)
+[Convert]::ToBase64String($s)
+```
+
+### 12.6 Kdy a čím se podepisuje
+
+Na pozadí (`setImmediate`) hned po vytvoření pohybu/transakce.
+
+Výběr certifikátu (`_resolveSignerThumbprint`):
+1. cert přiřazený **pracovníkovi** (`users.cert_thumbprint`),
+2. jinak globální `esign_thumbprint` / detekovaný QES.
+
+To odpovídá dikci vyhlášky: podpis **osoby, která zápis provedla**.
+
+### 12.7 XML export
+
+```xml
+<elektronickyPodpis podepsano="ano">
+  <podepsanaData>SM|412|37|-3|sale|2026-07-16 10:15:00|18</podepsanaData>
+  <otisk algoritmus="SHA-256">a1b2c3…</otisk>
+  <algoritmus>SHA256withRSA (PKCS#1 v1.5)</algoritmus>
+  <certThumbprint>A1B2C3D4E5F6…</certThumbprint>
+  <podepsal>CN=Jan Novák, O=…</podepsal>
+  <hodnota>BASE64_RSA_PODPISU…</hodnota>
+  <certifikat format="base64-DER">MIID…</certifikat>
+</elektronickyPodpis>
+```
+
+Celý XML soubor je navíc podepsaný **XMLDSig** (enveloped) — podpisy řádků + podpis dokumentu.
+
+### 12.8 Ověření a padělek
+
+1. vezmi `podepsanaData` → UTF-8  
+2. spočítej SHA-256  
+3. RSA-ověř veřejným klíčem z `certifikat` proti `hodnota` (Base64→bajty)
+
+Změna např. `delta` z `-3` na `-5` → jiný řetězec → podpis neplatí.
+
+### 12.9 Převod certifikátu na jiný počítač
+
+Soubor `.cer` / `.crt` z e-mailu **neobsahuje** soukromý klíč. Na původním PC
+v iSignum / iPostSignum proveďte zálohu včetně klíče (`.pfx` / `.p12` + silné heslo),
+přeneste na nový PC a importujte.
 
 ---
 
-### Jak převést podpis na jiný počítač
+## 13. Compliance s vyhláškou 147/2025 Sb. (evidence PML)
 
-Samotný soubor certifikátu, který přišel e-mailem (.cer, .crt apod.), neobsahuje soukromý klíč, takže na jiném počítači s ním nelze podepisovat. Soukromý klíč zůstává na počítači, kde byla žádost vytvořena pomocí iSignum/iPostSignum.
+> Mapování požadavků vyhlášky na funkce aplikace. **Není to právní posudek**, ale
+> technická kontrola, co software pokrývá.
+>
+> Legenda: ✅ splněno · ⚠️ částečně · ❌ chybí · 🟦 odpovědnost provozovatele · 📄 řešeno mimo SW (papírově)
 
-Pokud máš stále přístup k původnímu počítači, udělej toto:
+### Evidenční záznam — povinná pole a) až n)
 
-Na původním počítači, kde certifikát funguje, spusť iSignum.
-Proveď zálohu certifikátu včetně soukromého klíče (obvykle do souboru .pfx nebo .p12) a nastav silné heslo.
-Přenes tento soubor na nový počítač.
-Na novém počítači importuj .pfx a zadej heslo.
+| | požadavek | stav | poznámka |
+|---|---|---|---|
+| a | název PML + forma + podtyp | ✅ | `nazev`, `forma`, `podtyp` (XML i PDF) |
+| b | název výrobku + velikost jednotkového balení | ✅ | `nazev` + `velikostBaleni` |
+| c | datum příjmu | ✅ | `datumPrijmu` |
+| d | datum výdeje | ✅ | `datumVydeje` |
+| e | číslo dokladu o příjmu | ✅ | `cisloDokladuPrijmu` |
+| f | číslo dokladu o výdeji | ✅ | `cisloDokladuVydeje` (u prodeje `TX-<id>`) |
+| g | číslo šarže | ✅ | `cisloSarze` |
+| h | jméno/název a sídlo dodavatele | ✅ | `dodavatel` na každém řádku (je‑li nastaven) |
+| i | množství přijaté | ✅ | `mnozstviPrijate` |
+| j | množství vydané | ✅ | `mnozstviVydane` |
+| k | jednotka množství | ✅ | `jednotkaMnozstvi` |
+| l | stav zásob | ✅ | `stavZasob` |
+| m | identifikace osvědčení podle § 33f odst. 2 zákona | 📄 | papírově na prodejně (volitelně lze doplnit do SW) |
+| n | uznávaný el. podpis osoby, která zápis provedla | ✅ | per‑záznam RSA‑SHA256 + `cert_thumbprint` — viz § 12 |
+
+### § 3 — Evidenční kniha (obecné)
+
+| odst. | požadavek | stav | poznámka |
+|---|---|---|---|
+| (1) a | firma + adresa sídla + označení a **adresa provozovny** | ⚠️ | máme název, adresu, IČO, č. povolení; sídlo vs. provozovna zatím jedna adresa |
+| (1) c | zapisující: jméno + adresa + podpisový vzor + datum od kdy | ✅/⚠️ | jméno/adresa/datum ✅; „podpisový vzor" ≈ el. podpis certifikátem |
+| (1) d–f | předání knihy, počet listů, seznam látek | 📄 | papírový koncept — u el. evidence se neuplatní |
+| (3) | zápis v den skutečnosti + podpis | ✅ | `created_at` + per‑záznam el. podpis |
+| (4) | opravy se zachováním původního + datum + podpis | ⚠️ | event‑sourcing + audit + `adjust`; formální oprava pro všechny typy ještě doladit |
+| (5) | uchování 5 let | ⚠️ | lokálně + zálohy; 5letá retence není vynucená |
+
+### § 4 — Elektronická evidence
+
+| odst. | požadavek | stav | poznámka |
+|---|---|---|---|
+| (1) | denní sledování + zpětné zjištění 5 let | ✅/⚠️ | pohyby, uzávěrky; retence ⚠️ |
+| (2) | opravy + podpis | ⚠️ | viz § 3(4) |
+| (3) | oprávněné osoby + každý zápis uznávaný el. podpis | ✅ | role/permissions + per‑záznam QES (§ 12) |
+| (4) | samostatně pro organizační složky / činnosti | ✅/⚠️ | per pobočka ✅; oddělení per činnost ⚠️ |
+| (5) | zápis v den skutečnosti | ✅ | |
+| (6) | okamžitý .xml + tiskový výstup | ✅ | PML export XML + PDF |
+
+### § 5 — Vedení elektronické evidence
+
+| odst. | požadavek | stav | poznámka |
+|---|---|---|---|
+| (1) | 5 let + záloha bez odkladu po závěrce dne na odlišných nosičích | ✅/⚠️ | cloud/Drive po uzávěrce ✅; retence ⚠️ |
+| (2) a–h | vnitřní písemné předpisy | 🟦 | provozovatel |
+| (3) a–f | **evidence poruch** systému (do 14 dní, s podpisem) | ❌ | chybí jako funkce |
+
+### § 6 — Inventura
+
+| odst. | požadavek | stav | poznámka |
+|---|---|---|---|
+| (1) | čtvrtletní inventura | ✅ | + overdue upozornění |
+| (2) a–d | záznam v listinné podobě (počátek · příjem · výdej · konec) | ✅ | Protokol PDF u inventury |
+| (3) | datum, jméno, funkce, podpis | ✅/⚠️ | podpis ✅; funkce v PDF k ručnímu doplnění |
+| (4) | „Stav nezměněn" bez pohybu | ✅ | |
+| (5) | inventurní protokol při rozdílu | ✅/⚠️ | rozdíly + sloupec Zdůvodnění; zdůvodnění/funkce k doplnění |
+
+### Zbývající mezery (priorita)
+
+| # | mezera | § | dopad |
+|---|---|---|---|
+| 1 | Evidence poruch systému | § 5(3) | ❌ |
+| 2 | 5letá retence dat/záloh | § 4(1), § 5(1) | ⚠️ |
+| 3 | Podepsané opravy se zobrazením originálu | § 3(4), § 4(2) | ⚠️ |
+| 4 | Sídlo vs. provozovna; funkce u inventury | § 3(1)a, § 6(3) | ⚠️ |
+| 5 | Vnitřní předpisy | § 5(2) | 🟦 provozovatel |
+
+**Splněno:** záznam a–l + n, § 3(3), § 4 výstupy + podpisy, zálohování po závěrce, § 6 inventura. Bod **m)** papírově na prodejně.
+
+> Tato tabulka pokrývá části vyhlášky relevantní pro pokladní/skladový software
+> (§ 3–§ 6, evidenční záznam). Paragrafy o pěstování, výrobě, lékárnách, dovozu/vývozu
+> a přílohy MZd nejsou předmětem této aplikace.
+
+---
 
 *V případě dotazů kontaktujte dodavatele aplikace.*
