@@ -237,7 +237,7 @@ Pokud se zobrazí chyba (toast v rohu obrazovky nebo dialog), zde je přehled ne
 
 | Kód / zpráva | Co to znamená | Co udělat |
 |---|---|---|
-| **Databáze se probouzí** (`db_warming`) | Cloud databáze se pomalu spouští po nečinnosti (cca 10–30 s). | Počkejte 30 sekund a zkuste znovu. Netřeba panikovat. |
+| **Chyba sítě** (`network_error` / `timeout`) | Cloud API neodpovědělo nebo vypršel čas. | Zkontrolujte internet a zkuste znovu. |
 | **Offline** (`offline`) | Aplikace nemá internet. | Zkontrolujte připojení. Prodej funguje i offline, cloud operace ne. |
 | **Chyba sítě** (`network_error`) | Přechodná síťová chyba. | Zkuste za chvíli znovu. |
 | **Spojení vypršelo** (`timeout`) | Server neodpověděl včas. | Zkuste za chvíli znovu. |
