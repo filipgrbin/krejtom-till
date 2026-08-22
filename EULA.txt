@@ -45,7 +45,6 @@ a že
 - je odpovědný za správné nastavení produktů, jednotek, cen, šarží a dalších údajů,
 - je odpovědný za to, že jednotlivým uživatelům přidělí odpovídající oprávnění,
 - je odpovědný za ochranu přístupových údajů,
-- je odpovědný za provádění inventur a dalších zákonem požadovaných úkonů,
 - je odpovědný za kontrolu správnosti evidovaných údajů,
 - je odpovědný za dlouhodobou archivaci dat, pokud ji vyžadují právní předpisy,
 - musí mít zajištěn postup pro případ výpadku nebo poruchy systému,
