@@ -6,7 +6,7 @@
 
 ---
 
-## ✅ Uživatel smí:
+## Uživatel smí:
 
 - Používat software WellSale na zařízeních, která jsou zahrnuta v zakoupené licenci (1 pobočka = 1 zařízení).
 - Vytvářet a spravovat uživatelské účty (PIN) na licencovaném zařízení.
@@ -18,7 +18,7 @@
 
 ---
 
-## ❌ Uživatel nesmí:
+## Uživatel nesmí:
 
 - Kopírovat, distribuovat, pronajímat, půjčovat nebo poskytovat software třetím osobám.
 - Zasahovat do zdrojového kódu, provádět reverzní inženýrství, dekompilaci nebo jiné úpravy.
@@ -32,7 +32,7 @@
 
 ---
 
-## ⚠️ Uživatel bere na vědomí:
+## Uživatel bere na vědomí:
 
 - Odpovídá za správnost všech dat, která do systému zadává.
 - Odpovídá za ochranu svých přístupových údajů a za jejich zneužití.
