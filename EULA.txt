@@ -1,191 +1,46 @@
-LICENČNÍ SMLOUVA S KONCOVÝM UŽIVATELEM (EULA)
-PROGRAM WELLSALE
-verze 1.0, platnost od [DATUM]
-Poskytovatel:
-Filip Grbin
-[IČO]
-[Adresa]
-[Kontaktní e-mail]
-(dále jen „Poskytovatel")
-Uživatelem licence se rozumí fyzická nebo právnická osoba, která zakoupila
-nebo jiným způsobem nabyla licenci k programu WellSale a nainstalovala jej
-na koncové zařízení (dále jen „Uživatel").
-Programem se rozumí pokladní software WellSale včetně jeho komponent,
-dokumentace a souvisejících cloudových služeb provozovaných Poskytovatelem
-(dále jen „Program").
-1. ÚVODNÍ USTANOVENÍ
-1.1  Tato smlouva upravuje podmínky, za kterých Poskytovatel uděluje
-     Uživateli oprávnění užívat Program.
-1.2  Instalací, aktivací nebo používáním Programu Uživatel potvrzuje, že
-     se s touto smlouvou seznámil a souhlasí s ní v plném rozsahu. Pokud
-     se smlouvou nesouhlasí, není oprávněn Program používat a je povinen
-     jej z koncového zařízení odstranit.
-2. UDĚLENÍ LICENCE
-2.1  Poskytovatel uděluje Uživateli nevýhradní, nepřevoditelné a časově
-     omezené (resp. časově neomezené dle typu licence) oprávnění užívat
-     Program za podmínek stanovených touto smlouvou.
-2.2  Licence se uděluje na konkrétní pobočku (provozovnu) Uživatele.
-     Každá samostatná provozovna vyžaduje vlastní licenční klíč.
-     V rámci jedné pobočky je dovoleno Program nainstalovat na libovolný
-     počet zařízení provozovaných tímtéž Uživatelem v rámci téže pobočky.
-2.3  Typy licencí:
-     a) Doživotní licence — opravňuje k užívání Programu po neomezenou
-        dobu. Uživatel má v rámci doživotní licence nárok na bezplatné
-        aktualizace, opravy chyb a technickou podporu po dobu dvanácti
-        (12) měsíců od data aktivace. Po uplynutí této doby zůstává
-        funkčnost zachována, ale Poskytovatel není povinen poskytovat
-        nové verze ani opravy.
-     b) Dočasná licence — opravňuje k užívání Programu po předem
-        sjednanou dobu (např. 12 měsíců). Po dobu platnosti licence má
-        Uživatel nárok na aktualizace, opravy chyb a technickou podporu.
-        Po skončení platnosti licence Uživatel ztrácí oprávnění Program
-        užívat a Program se uvede do uzamčeného stavu, dokud nebude
-        licence obnovena.
-3. OMEZENÍ UŽÍVÁNÍ
-3.1  Uživatel není oprávněn:
-     a) zpětně analyzovat, dekompilovat ani převádět Program do
-        zdrojového kódu, kromě případů povolených kogentními ustanoveními
-        zákona č. 121/2000 Sb., autorský zákon;
-     b) měnit, upravovat nebo vytvářet odvozená díla z Programu;
-     c) odstraňovat či pozměňovat údaje o autorství, licenčním klíči
-        nebo jiné identifikační prvky Programu;
-     d) sdílet, prodávat, pronajímat, půjčovat či jinak zpřístupňovat
-        licenční klíč třetím osobám;
-     e) používat Program k jakékoli činnosti, která by byla v rozporu
-        s českým právním řádem.
-3.2  Licenční klíč je vázán na konkrétního Uživatele a pobočku. Při
-     zjištění zneužití (např. souběžné aktivace na více pobočkách bez
-     odpovídajícího počtu licencí) je Poskytovatel oprávněn licenci
-     deaktivovat bez náhrady.
-4. AKTUALIZACE A TECHNICKÁ PODPORA
-4.1  Rozsah a doba poskytování aktualizací a podpory se řídí typem
-     licence podle čl. 2.3.
-4.2  Aktualizace se distribuují prostřednictvím automatického
-     aktualizačního mechanismu zabudovaného v Programu. Uživatel
-     bere na vědomí, že nainstalování aktualizací může vyžadovat
-     restart Programu.
-4.3  Technická podpora je poskytována prostřednictvím e-mailu
-     uvedeného v záhlaví této smlouvy v pracovní dny.
-5. CLOUDOVÉ ZÁLOHY A ZPRACOVÁNÍ OSOBNÍCH ÚDAJŮ
-5.1  Program umožňuje volitelné nahrávání záloh databáze a uzávěrek
-     na cloudové úložiště provozované Poskytovatelem (Amazon Web
-     Services, region eu-central-1). Funkci lze kdykoli v nastavení
-     vypnout.
-5.2  Cloudové zálohy obsahují provozní data Uživatele (transakce,
-     produkty, uzávěrky, nastavení). Tato data jsou na úložišti
-     uchovávána v šifrované podobě (Server-Side Encryption AES-256).
-5.3  Poskytovatel zpracovává osobní údaje výhradně v rozsahu a za
-     účelem nezbytným k poskytování Programu a souvisejících služeb
-     (autentizace licence, cloudové zálohy, technická podpora).
-     Bližší podmínky zpracování se řídí samostatným dokumentem
-     „Zásady ochrany osobních údajů" a obecným nařízením o ochraně
-     osobních údajů (GDPR — nařízení EU 2016/679).
-5.4  Uživatel je správcem osobních údajů, které do Programu zadává
-     (např. údaje o zákaznících v poznámkách k transakcím).
-     Poskytovatel vystupuje v této roli jako zpracovatel.
-5.5  Uživatel má právo na výmaz svých cloudových záloh — žádost lze
-     zaslat na kontaktní e-mail uvedený v záhlaví této smlouvy.
-6. ŠIFROVÁNÍ LOKÁLNÍ DATABÁZE
-6.1  Program podporuje šifrování lokální databáze pomocí klíče
-     odvozeného z licenčních údajů na straně serveru Poskytovatele.
-     Klíč je na koncovém zařízení uložen v zabezpečeném úložišti
-     operačního systému (Windows DPAPI).
-6.2  Uživatel bere na vědomí, že:
-     a) klíč je vázán na konkrétního uživatele a koncové zařízení;
-     b) přemístění zašifrované databáze na jiné zařízení vyžaduje
-        opětovnou aktivaci licence pro získání téhož klíče;
-     c) ztráta licenčního klíče nebo dlouhodobá nedostupnost
-        cloudových služeb Poskytovatele může vést k nemožnosti
-        dešifrování existující databáze.
-6.3  Poskytovatel doporučuje Uživateli pravidelně exportovat zálohy
-     ve formátu .wsbak (s heslem na bázi licenčního klíče) a uchovávat
-     je na bezpečném místě nezávislém na koncovém zařízení.
-7. DOSTUPNOST PROGRAMU A SLUŽEB
-7.1  Poskytovatel vyvíjí maximální úsilí k zajištění dostupnosti
-     cloudových služeb, negarantuje však jejich nepřetržitý provoz.
-     Program je navržen tak, aby v rozsahu základních funkcí (prodej,
-     uzávěrka, tisk) fungoval i bez aktivního připojení k cloudovým
-     službám po dobu platnosti aktivačního tokenu (typicky 7 dní
-     bez ověření).
-7.2  V případě dlouhodobé nedostupnosti cloudových služeb je
-     Poskytovatel oprávněn poskytnout Uživateli záložní postup pro
-     ověření licence (např. ručně vystavený offline token).
-8. ZÁRUKY A OMEZENÍ ODPOVĚDNOSTI
-8.1  Program je poskytován ve stavu „jak stojí a leží" („as is").
-     Poskytovatel neručí za to, že Program je bezchybný, ani za to,
-     že bude vyhovovat všem konkrétním potřebám Uživatele.
-8.2  Uživatel bere na vědomí, že Program zpracovává finanční data,
-     a je proto plně odpovědný za:
-     a) pravidelné kontrolování správnosti zaznamenaných transakcí;
-     b) ukládání záloh databáze na nezávislé úložiště;
-     c) dodržování příslušných daňových a účetních předpisů.
-8.3  Poskytovatel neodpovídá za jakoukoli škodu vzniklou:
-     a) ztrátou dat v důsledku nedodržení doporučených postupů
-        pro zálohování;
-     b) selháním koncového zařízení Uživatele;
-     c) výpadkem služeb třetích stran (internetové připojení, cloud,
-        platební brány);
-     d) chybným použitím Programu v rozporu s dokumentací.
-8.4  Celková odpovědnost Poskytovatele za škodu z této smlouvy
-     je omezena výší ceny, kterou Uživatel za licenci k Programu
-     zaplatil v posledních dvanácti (12) měsících. Toto omezení se
-     neuplatní na škodu způsobenou úmyslně nebo z hrubé nedbalosti.
-9. UKONČENÍ SMLOUVY
-9.1  Smlouva se ukončuje:
-     a) uplynutím doby platnosti dočasné licence;
-     b) odinstalováním Programu;
-     c) odstoupením kterékoli ze stran v případě podstatného
-        porušení smlouvy druhou stranou.
-9.2  Ukončením smlouvy zaniká právo Uživatele používat Program.
-     Uživatel je povinen do třiceti (30) dnů Program z koncových
-     zařízení odstranit.
-10. SOFTWARE TŘETÍCH STRAN
-10.1 Program v sobě zahrnuje níže uvedené komponenty třetích stran.
-     Jejich užití se řídí licencemi uvedenými u příslušné komponenty.
-     Plné texty licencí jsou k dispozici na vyžádání na kontaktním
-     e-mailu Poskytovatele.
-     Komponenta                                | Licence
-     ----------------------------------------- | -------------------
-     Electron                                  | MIT
-     React, React DOM                          | MIT
-     better-sqlite3-multiple-ciphers           | MIT
-     SQLite                                    | Public Domain
-     sqlite3-multiple-ciphers                  | BSD-3-Clause
-     googleapis (Node.js client)               | Apache 2.0
-     node-thermal-printer                      | MIT
-     jsPDF, jspdf-autotable                    | MIT
-     SheetJS (xlsx)                            | Apache 2.0
-     recharts                                  | MIT
-     date-fns                                  | MIT
-     sonner                                    | MIT
-     lucide-react                              | ISC
-     Tailwind CSS                              | MIT
-     Radix UI primitives                       | MIT
-     @tanstack/react-query                     | MIT
-     class-variance-authority, clsx,
-       tailwind-merge                          | MIT
-     zod                                       | MIT
-     electron-updater, electron-builder        | MIT
-10.2 Aktualizace, doplnění nebo nahrazení komponent třetích stran
-     v novějších verzích Programu nemění podmínky této smlouvy.
-11. ROZHODNÉ PRÁVO A SPORY
-11.1 Tato smlouva a vztahy z ní plynoucí se řídí právním řádem
-     České republiky, zejména zákonem č. 89/2012 Sb. (občanský
-     zákoník) a zákonem č. 121/2000 Sb. (autorský zákon).
-11.2 Veškeré spory vznikající z této smlouvy budou strany řešit
-     primárně smírnou cestou. Pokud sporu nelze předejít, je
-     k jeho rozhodnutí věcně a místně příslušný Městský soud v Praze.
-12. ZÁVĚREČNÁ USTANOVENÍ
-12.1 Pokud se některé ustanovení této smlouvy ukáže neplatným nebo
-     neúčinným, ostatní ustanovení zůstávají v platnosti.
-12.2 Poskytovatel je oprávněn jednostranně měnit znění této smlouvy.
-     O změně bude Uživatel informován při příští aktualizaci Programu.
-     Pokud Uživatel s novou verzí smlouvy nesouhlasí, je oprávněn
-     ukončit používání Programu — již zaplacené licenční poplatky
-     v takovém případě nelze refundovat za dobu, kdy Program byl
-     skutečně používán.
-12.3 Tato smlouva je vyhotovena v českém jazyce a nahrazuje veškerá
-     předchozí ústní nebo písemná ujednání mezi Poskytovatelem
-     a Uživatelem ohledně Programu.
-V [MÍSTO], dne [DATUM]
-Poskytovatel: [PODPIS]
+# Technické podmínky užívání – WellSale
+
+## Shrnutí práv a povinností uživatele
+
+*(Toto je zjednodušené shrnutí vyplývající z licenční smlouvy. Právně závazný je plný text Smlouvy o poskytování digitálního obsahu.)*
+
+---
+
+## ✅ Uživatel smí:
+
+- Používat software WellSale na zařízeních, která jsou zahrnuta v zakoupené licenci (1 pobočka = 1 zařízení).
+- Vytvářet a spravovat uživatelské účty (PIN) na licencovaném zařízení.
+- Spravovat produkty, ceny, sklad, uživatele a další data dle svých oprávnění.
+- Exportovat data a zálohy pro vlastní potřebu, účetnictví nebo kontrolu.
+- Využívat cloudové zálohy a webové rozhraní (pokud jsou součástí služby).
+- Poskytnout přístup svému IT dodavateli (na vlastní odpovědnost, sdílení přístupových údajů je vlastní riziko).
+- Žádat o přenos licence na nové zařízení (po dohodě s poskytovatelem).
+
+---
+
+## ❌ Uživatel nesmí:
+
+- Kopírovat, distribuovat, pronajímat, půjčovat nebo poskytovat software třetím osobám.
+- Zasahovat do zdrojového kódu, provádět reverzní inženýrství, dekompilaci nebo jiné úpravy.
+- Obcházet licenční ochranu, technická omezení nebo HWID vazbu.
+- Instalovat a provozovat software na zařízeních, která nejsou zahrnuta v licenci.
+- Používat software po skončení platnosti licence nebo po zablokování licence.
+- Zasahovat do databáze software mimo určené rozhraní.
+- Zneužívat API, scrapovat data nebo narušovat bezpečnost služby.
+- Sdílet přihlašovací údaje (PIN, licenční klíč, webový kód) s neoprávněnými osobami.
+- Používat software v rozporu s platnými právními předpisy.
+
+---
+
+## ⚠️ Uživatel bere na vědomí:
+
+- Odpovídá za správnost všech dat, která do systému zadává.
+- Odpovídá za ochranu svých přístupových údajů a za jejich zneužití.
+- Je povinen si před ukončením služby exportovat svá data a stáhnout zálohy.
+- Software vyžaduje připojení k internetu pro provoz Služby (aktivace, synchronizace, ověření licence).
+- Webové rozhraní nemá garantovanou dostupnost (uptime).
+- Poskytovatel neručí za hardware, operační systém ani internetové připojení uživatele.
+
+---
+
+**Souhlasím s výše uvedenými podmínkami.**
