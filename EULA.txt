@@ -36,7 +36,7 @@
 - Poskytovatel neodpovídá za správnost nebo úplnost údajů zadaných Zákazníkem ani za jejich soulad s právními povinnostmi Zákazníka.
 - Odpovídá za ochranu svých přístupových údajů a za jejich zneužití.
 - Je povinen si před ukončením služby exportovat svá data a stáhnout zálohy.
-- Software vyžaduje připojení k internetu pro provoz Služby (aktivace, synchronizace, ověření licence).
+- Internetové připojení je vyžadováno zejména pro aktivaci licence, ověřování licence, synchronizaci dat a využívání webového rozhraní a cloudových funkcí. Některé funkce Desktopové aplikace mohou být dostupné i bez připojení k internetu.
 - Webové rozhraní nemá garantovanou dostupnost (uptime).
 - Poskytovatel neručí za hardware, operační systém ani internetové připojení uživatele.
 
