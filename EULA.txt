@@ -40,6 +40,17 @@
 - Webové rozhraní nemá garantovanou dostupnost (uptime).
 - Poskytovatel neručí za hardware, operační systém ani internetové připojení uživatele.
 
+a že
+- je odpovědný za správnost a úplnost údajů vložených do WellSale,
+- je odpovědný za správné nastavení produktů, jednotek, cen, šarží a dalších údajů,
+- je odpovědný za to, že jednotlivým uživatelům přidělí odpovídající oprávnění,
+- je odpovědný za ochranu přístupových údajů,
+- je odpovědný za provádění inventur a dalších zákonem požadovaných úkonů,
+- je odpovědný za kontrolu správnosti evidovaných údajů,
+- je odpovědný za dlouhodobou archivaci dat, pokud ji vyžadují právní předpisy,
+- musí mít zajištěn postup pro případ výpadku nebo poruchy systému,
+- musí své zaměstnance seznámit s pravidly používání systému.
+
 ---
 
 **Potvrzuji, že jsem se seznámil/a s Technickými podmínkami užívání WellSale a beru na vědomí pravidla uvedená v tomto dokumentu.**
