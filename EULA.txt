@@ -13,7 +13,6 @@
 - Spravovat produkty, ceny, sklad, uživatele a další data dle svých oprávnění.
 - Exportovat data a zálohy pro vlastní potřebu, účetnictví nebo kontrolu.
 - Využívat cloudové zálohy a webové rozhraní (pokud jsou součástí služby).
-- Poskytnout přístup svému IT dodavateli (na vlastní odpovědnost, sdílení přístupových údajů je vlastní riziko).
 - Žádat o přenos licence na nové zařízení (po dohodě s poskytovatelem).
 
 ---
