@@ -33,7 +33,7 @@
 
 ## Uživatel bere na vědomí:
 
-- Odpovídá za správnost všech dat, která do systému zadává.
+- Poskytovatel neodpovídá za správnost nebo úplnost údajů zadaných Zákazníkem ani za jejich soulad s právními povinnostmi Zákazníka.
 - Odpovídá za ochranu svých přístupových údajů a za jejich zneužití.
 - Je povinen si před ukončením služby exportovat svá data a stáhnout zálohy.
 - Software vyžaduje připojení k internetu pro provoz Služby (aktivace, synchronizace, ověření licence).
