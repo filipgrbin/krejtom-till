@@ -13,7 +13,7 @@
 - Spravovat produkty, ceny, sklad, uživatele a další data dle svých oprávnění.
 - Exportovat data a zálohy pro vlastní potřebu, účetnictví nebo kontrolu.
 - Využívat cloudové zálohy a webové rozhraní (pokud jsou součástí služby).
-- Žádat o přenos licence na nové zařízení (po dohodě s poskytovatelem).
+- Poskytovatel může na žádost Zákazníka převést aktivaci pobočky na jiné zařízení, zejména v případě výměny nebo poruchy původního zařízení.
 
 ---
 
