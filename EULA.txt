@@ -12,7 +12,7 @@
 - Vytvářet a spravovat uživatelské účty (PIN) na licencovaném zařízení.
 - Spravovat produkty, ceny, sklad, uživatele a další data dle svých oprávnění.
 - Exportovat data a zálohy pro vlastní potřebu, účetnictví nebo kontrolu.
-- Využívat cloudové zálohy a webové rozhraní (pokud jsou součástí služby).
+- Využívat cloudové zálohy a webové rozhraní v rozsahu poskytovaném WellSale.
 - Poskytovatel může na žádost Zákazníka převést aktivaci pobočky na jiné zařízení, zejména v případě výměny nebo poruchy původního zařízení.
 
 ---
